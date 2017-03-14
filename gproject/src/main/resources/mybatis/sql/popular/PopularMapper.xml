@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.gproject.popular.mapper.PopularMapper" >
+  <resultMap id="BaseResultMap" type="com.gproject.popular.pojo.Popular" >
+    <id column="popular_id" property="popularId" jdbcType="INTEGER" />
+    <result column="popular_name" property="popularName" jdbcType="VARCHAR" />
+    <result column="popular_no" property="popularNo" jdbcType="INTEGER" />
+    <result column="last_update_time" property="lastUpdateTime" jdbcType="TIMESTAMP" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    popular_id, popular_name, popular_no, last_update_time
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+    select 
+    <include refid="Base_Column_List" />
+    from popular
+    where popular_id = #{popularId,jdbcType=INTEGER}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
+    delete from popular
+    where popular_id = #{popularId,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" parameterType="com.gproject.popular.pojo.Popular" >
+    insert into popular (popular_id, popular_name, popular_no, 
+      last_update_time)
+    values (#{popularId,jdbcType=INTEGER}, #{popularName,jdbcType=VARCHAR}, #{popular_no,jdbcType=INTEGER}, 
+      #{lastUpdateTime,jdbcType=TIMESTAMP})
+  </insert>
+  <insert id="insertSelective" parameterType="com.gproject.popular.pojo.Popular" >
+    insert into popular
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="popularId != null" >
+        popular_id,
+      </if>
+      <if test="popularName != null" >
+        popular_name,
+      </if>
+      <if test="popular_no != null" >
+        popular_no,
+      </if>
+      <if test="lastUpdateTime != null" >
+        last_update_time,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="popularId != null" >
+        #{popularId,jdbcType=INTEGER},
+      </if>
+      <if test="popularName != null" >
+        #{popularName,jdbcType=VARCHAR},
+      </if>
+      <if test="popular_no != null" >
+        #{popular_no,jdbcType=INTEGER},
+      </if>
+      <if test="lastUpdateTime != null" >
+        #{lastUpdateTime,jdbcType=TIMESTAMP},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.gproject.popular.pojo.Popular" >
+    update popular
+    <set >
+      <if test="popularName != null" >
+        popular_name = #{popularName,jdbcType=VARCHAR},
+      </if>
+      <if test="popular_no != null" >
+        popular_no = #{popular_no,jdbcType=INTEGER},
+      </if>
+      <if test="lastUpdateTime != null" >
+        last_update_time = #{lastUpdateTime,jdbcType=TIMESTAMP},
+      </if>
+    </set>
+    where popular_id = #{popularId,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.gproject.popular.pojo.Popular" >
+    update popular
+    set popular_name = #{popularName,jdbcType=VARCHAR},
+      popular_no = #{popular_no,jdbcType=INTEGER},
+      last_update_time = #{lastUpdateTime,jdbcType=TIMESTAMP}
+    where popular_id = #{popularId,jdbcType=INTEGER}
+  </update>
+</mapper>

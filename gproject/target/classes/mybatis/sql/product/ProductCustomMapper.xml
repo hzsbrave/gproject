@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.gproject.product.mapper.ProductCustomMapper">
+  <resultMap id="BaseResultMap" type="com.gproject.product.pojo.ProductCustom">
+    <id column="product_id" jdbcType="INTEGER" property="productId" />
+    <result column="category_id" jdbcType="INTEGER" property="categoryId" />
+    <result column="product_name" jdbcType="VARCHAR" property="productName" />
+    <result column="product_price" jdbcType="DECIMAL" property="productPrice" />
+    <result column="short_desc" jdbcType="VARCHAR" property="shortDesc" />
+    <result column="thumbnail" jdbcType="VARCHAR" property="thumbnail" />
+    <result column="sale_num" jdbcType="INTEGER" property="saleNum" />
+    <result column="static_page" jdbcType="VARCHAR" property="staticPage" />
+    <result column="status" jdbcType="VARCHAR" property="status" />
+    <result column="keyword" jdbcType="VARCHAR" property="keyword" />
+    <result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
+    <result column="on_sale_time" jdbcType="TIMESTAMP" property="onSaleTime" />
+    <result column="off_sale_time" jdbcType="TIMESTAMP" property="offSaleTime" />
+  </resultMap>
+  <sql id="Base_Column_List">
+    product_id, category_id, product_name, product_price, short_desc, thumbnail, sale_num, 
+    static_page, status, keyword, create_time, on_sale_time, off_sale_time
+  </sql>
+
+
+
+
+</mapper>

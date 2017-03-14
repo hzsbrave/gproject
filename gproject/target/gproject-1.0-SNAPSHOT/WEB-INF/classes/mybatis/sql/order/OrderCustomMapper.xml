@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.gproject.order.mapper.OrderCustomMapper">
+    <resultMap id="BaseResultMap" type="com.gproject.order.pojo.OrderCustom">
+        <id column="order_id" property="orderId" jdbcType="INTEGER"/>
+        <result column="user_id" property="userId" jdbcType="INTEGER"/>
+        <result column="address_id" property="addressId" jdbcType="INTEGER"/>
+        <result column="order_number" property="orderNumber" jdbcType="VARCHAR"/>
+        <result column="prod_num" property="prodNum" jdbcType="INTEGER"/>
+        <result column="total_fee" property="totalFee" jdbcType="DECIMAL"/>
+        <result column="express_fee" property="expressFee" jdbcType="DECIMAL"/>
+        <result column="create_time" property="createTime" jdbcType="TIMESTAMP"/>
+        <result column="state" property="state" jdbcType="INTEGER"/>
+    </resultMap>
+    <sql id="Base_Column_List">
+    order_id, user_id, address_id, order_number, prod_num, total_fee, express_fee, create_time, 
+    state
+  </sql>
+    <insert id="insertOrder" useGeneratedKeys="true" keyProperty="orderId"
+            parameterType="com.gproject.order.pojo.OrderCustom">
+        insert into `order`
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="orderId != null">
+                order_id,
+            </if>
+            <if test="userId != null">
+                user_id,
+            </if>
+            <if test="addressId != null">
+                address_id,
+            </if>
+            <if test="orderNumber != null">
+                order_number,
+            </if>
+            <if test="prodNum != null">
+                prod_num,
+            </if>
+            <if test="totalFee != null">
+                total_fee,
+            </if>
+            <if test="expressFee != null">
+                express_fee,
+            </if>
+            <if test="createTime != null">
+                create_time,
+            </if>
+            <if test="state != null">
+                state,
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="orderId != null">
+                #{orderId,jdbcType=INTEGER},
+            </if>
+            <if test="userId != null">
+                #{userId,jdbcType=INTEGER},
+            </if>
+            <if test="addressId != null">
+                #{addressId,jdbcType=INTEGER},
+            </if>
+            <if test="orderNumber != null">
+                #{orderNumber,jdbcType=VARCHAR},
+            </if>
+            <if test="prodNum != null">
+                #{prodNum,jdbcType=INTEGER},
+            </if>
+            <if test="totalFee != null">
+                #{totalFee,jdbcType=DECIMAL},
+            </if>
+            <if test="expressFee != null">
+                #{expressFee,jdbcType=DECIMAL},
+            </if>
+            <if test="createTime != null">
+                #{createTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="state != null">
+                #{state,jdbcType=INTEGER},
+            </if>
+        </trim>
+    </insert>
+</mapper>

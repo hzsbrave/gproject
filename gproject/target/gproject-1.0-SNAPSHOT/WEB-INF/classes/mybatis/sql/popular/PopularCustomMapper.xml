@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.gproject.popular.mapper.PopularCustomMapper">
+    <resultMap id="BaseResultMap" type="com.gproject.popular.pojo.PopularCustom">
+        <id column="popular_id" property="popularId" jdbcType="INTEGER"/>
+        <result column="popular_name" property="popularName" jdbcType="VARCHAR"/>
+        <result column="popular_no" property="popularNo" jdbcType="INTEGER"/>
+        <result column="last_update_time" property="lastUpdateTime" jdbcType="TIMESTAMP"/>
+    </resultMap>
+    <sql id="Base_Column_List">
+    popular_id, popular_name, popular_no, last_update_time
+  </sql>
+    <select id="queryPopularLimit" parameterType="com.gproject.popular.pojo.vo.PopularVo" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List" />
+        from popular ORDER BY popular.popular_no desc LIMIT #{no}
+    </select>
+
+</mapper>

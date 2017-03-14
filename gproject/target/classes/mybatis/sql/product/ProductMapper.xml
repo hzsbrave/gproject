@@ -1,0 +1,189 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.gproject.product.mapper.ProductMapper">
+  <resultMap id="BaseResultMap" type="com.gproject.product.pojo.Product">
+    <id column="product_id" jdbcType="INTEGER" property="productId" />
+    <result column="category_id" jdbcType="INTEGER" property="categoryId" />
+    <result column="product_name" jdbcType="VARCHAR" property="productName" />
+    <result column="product_price" jdbcType="DECIMAL" property="productPrice" />
+    <result column="short_desc" jdbcType="VARCHAR" property="shortDesc" />
+    <result column="thumbnail" jdbcType="VARCHAR" property="thumbnail" />
+    <result column="sale_num" jdbcType="INTEGER" property="saleNum" />
+    <result column="static_page" jdbcType="VARCHAR" property="staticPage" />
+    <result column="status" jdbcType="VARCHAR" property="status" />
+    <result column="keyword" jdbcType="VARCHAR" property="keyword" />
+    <result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
+    <result column="on_sale_time" jdbcType="TIMESTAMP" property="onSaleTime" />
+    <result column="off_sale_time" jdbcType="TIMESTAMP" property="offSaleTime" />
+  </resultMap>
+  <sql id="Base_Column_List">
+    product_id, category_id, product_name, product_price, short_desc, thumbnail, sale_num, 
+    static_page, status, keyword, create_time, on_sale_time, off_sale_time
+  </sql>
+  <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from product
+    where product_id = #{productId,jdbcType=INTEGER}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+    delete from product
+    where product_id = #{productId,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" parameterType="com.gproject.product.pojo.Product">
+    insert into product (product_id, category_id, product_name, 
+      product_price, short_desc, thumbnail, 
+      sale_num, static_page, status, 
+      keyword, create_time, on_sale_time, 
+      off_sale_time)
+    values (#{productId,jdbcType=INTEGER}, #{categoryId,jdbcType=INTEGER}, #{productName,jdbcType=VARCHAR}, 
+      #{productPrice,jdbcType=DECIMAL}, #{shortDesc,jdbcType=VARCHAR}, #{thumbnail,jdbcType=VARCHAR}, 
+      #{saleNum,jdbcType=INTEGER}, #{staticPage,jdbcType=VARCHAR}, #{status,jdbcType=VARCHAR}, 
+      #{keyword,jdbcType=VARCHAR}, #{createTime,jdbcType=TIMESTAMP}, #{onSaleTime,jdbcType=TIMESTAMP}, 
+      #{offSaleTime,jdbcType=TIMESTAMP})
+  </insert>
+  <insert id="insertSelective" parameterType="com.gproject.product.pojo.Product">
+    insert into product
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="productId != null">
+        product_id,
+      </if>
+      <if test="categoryId != null">
+        category_id,
+      </if>
+      <if test="productName != null">
+        product_name,
+      </if>
+      <if test="productPrice != null">
+        product_price,
+      </if>
+      <if test="shortDesc != null">
+        short_desc,
+      </if>
+      <if test="thumbnail != null">
+        thumbnail,
+      </if>
+      <if test="saleNum != null">
+        sale_num,
+      </if>
+      <if test="staticPage != null">
+        static_page,
+      </if>
+      <if test="status != null">
+        status,
+      </if>
+      <if test="keyword != null">
+        keyword,
+      </if>
+      <if test="createTime != null">
+        create_time,
+      </if>
+      <if test="onSaleTime != null">
+        on_sale_time,
+      </if>
+      <if test="offSaleTime != null">
+        off_sale_time,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="productId != null">
+        #{productId,jdbcType=INTEGER},
+      </if>
+      <if test="categoryId != null">
+        #{categoryId,jdbcType=INTEGER},
+      </if>
+      <if test="productName != null">
+        #{productName,jdbcType=VARCHAR},
+      </if>
+      <if test="productPrice != null">
+        #{productPrice,jdbcType=DECIMAL},
+      </if>
+      <if test="shortDesc != null">
+        #{shortDesc,jdbcType=VARCHAR},
+      </if>
+      <if test="thumbnail != null">
+        #{thumbnail,jdbcType=VARCHAR},
+      </if>
+      <if test="saleNum != null">
+        #{saleNum,jdbcType=INTEGER},
+      </if>
+      <if test="staticPage != null">
+        #{staticPage,jdbcType=VARCHAR},
+      </if>
+      <if test="status != null">
+        #{status,jdbcType=VARCHAR},
+      </if>
+      <if test="keyword != null">
+        #{keyword,jdbcType=VARCHAR},
+      </if>
+      <if test="createTime != null">
+        #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="onSaleTime != null">
+        #{onSaleTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="offSaleTime != null">
+        #{offSaleTime,jdbcType=TIMESTAMP},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.gproject.product.pojo.Product">
+    update product
+    <set>
+      <if test="categoryId != null">
+        category_id = #{categoryId,jdbcType=INTEGER},
+      </if>
+      <if test="productName != null">
+        product_name = #{productName,jdbcType=VARCHAR},
+      </if>
+      <if test="productPrice != null">
+        product_price = #{productPrice,jdbcType=DECIMAL},
+      </if>
+      <if test="shortDesc != null">
+        short_desc = #{shortDesc,jdbcType=VARCHAR},
+      </if>
+      <if test="thumbnail != null">
+        thumbnail = #{thumbnail,jdbcType=VARCHAR},
+      </if>
+      <if test="saleNum != null">
+        sale_num = #{saleNum,jdbcType=INTEGER},
+      </if>
+      <if test="staticPage != null">
+        static_page = #{staticPage,jdbcType=VARCHAR},
+      </if>
+      <if test="status != null">
+        status = #{status,jdbcType=VARCHAR},
+      </if>
+      <if test="keyword != null">
+        keyword = #{keyword,jdbcType=VARCHAR},
+      </if>
+      <if test="createTime != null">
+        create_time = #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="onSaleTime != null">
+        on_sale_time = #{onSaleTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="offSaleTime != null">
+        off_sale_time = #{offSaleTime,jdbcType=TIMESTAMP},
+      </if>
+    </set>
+    where product_id = #{productId,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.gproject.product.pojo.Product">
+    update product
+    set category_id = #{categoryId,jdbcType=INTEGER},
+      product_name = #{productName,jdbcType=VARCHAR},
+      product_price = #{productPrice,jdbcType=DECIMAL},
+      short_desc = #{shortDesc,jdbcType=VARCHAR},
+      thumbnail = #{thumbnail,jdbcType=VARCHAR},
+      sale_num = #{saleNum,jdbcType=INTEGER},
+      static_page = #{staticPage,jdbcType=VARCHAR},
+      status = #{status,jdbcType=VARCHAR},
+      keyword = #{keyword,jdbcType=VARCHAR},
+      create_time = #{createTime,jdbcType=TIMESTAMP},
+      on_sale_time = #{onSaleTime,jdbcType=TIMESTAMP},
+      off_sale_time = #{offSaleTime,jdbcType=TIMESTAMP}
+    where product_id = #{productId,jdbcType=INTEGER}
+  </update>
+
+</mapper>

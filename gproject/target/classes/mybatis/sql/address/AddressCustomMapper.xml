@@ -1,0 +1,102 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.gproject.address.mapper.AddressCustomMapper">
+    <resultMap id="BaseResultMap" type="com.gproject.address.pojo.AddressCustom">
+        <id column="addr_id" property="addrId" jdbcType="INTEGER"/>
+        <result column="user_id" property="userId" jdbcType="INTEGER"/>
+        <result column="status" property="status" jdbcType="INTEGER"/>
+        <result column="telphone" property="telphone" jdbcType="VARCHAR"/>
+        <result column="address" property="address" jdbcType="VARCHAR"/>
+        <result column="deleted" property="deleted" jdbcType="INTEGER"/>
+        <result column="name" property="name" jdbcType="VARCHAR" />
+    </resultMap>
+    <sql id="Base_Column_List">
+    addr_id, user_id, status, telphone, address,`name`, deleted
+  </sql>
+
+    <select id="queryAddress" resultMap="BaseResultMap" parameterType="java.lang.Integer">
+        select
+        <include refid="Base_Column_List"/>
+        from address where user_id=#{userId} and deleted = 0
+    </select>
+    <select id="queryAddressByKey" resultMap="BaseResultMap" parameterType="java.lang.Integer">
+        select
+        <include refid="Base_Column_List"/>
+        from address where addr_id = #{addrId,jdbcType=INTEGER}
+    </select>
+    <select id="queryAddressByDefault" resultMap="BaseResultMap" parameterType="java.lang.Integer">
+        select
+        <include refid="Base_Column_List"/>
+        from address where user_id=#{userId} and status = 2 and deleted = 0
+    </select>
+    <update id="updateAddressByAddrId" parameterType="com.gproject.address.pojo.AddressCustom">
+        update address
+        <set>
+            <if test="status != null">
+                status = #{status,jdbcType=INTEGER},
+            </if>
+            <if test="telphone != null">
+                telphone = #{telphone,jdbcType=VARCHAR},
+            </if>
+            <if test="name != null">
+                `name` = #{name,jdbcType=VARCHAR},
+            </if>
+            <if test="address != null">
+                address = #{address,jdbcType=VARCHAR},
+            </if>
+            <if test="deleted != null">
+                deleted = #{deleted,jdbcType=INTEGER},
+            </if>
+        </set>
+        where addr_id = #{addrId,jdbcType=INTEGER}
+    </update>
+    <insert id="insertAddress" parameterType="com.gproject.address.pojo.AddressCustom">
+        insert into address
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="addrId != null">
+                addr_id,
+            </if>
+            <if test="userId != null">
+                user_id,
+            </if>
+            <if test="name != null">
+                `name`,
+            </if>
+            <if test="status != null">
+                status,
+            </if>
+            <if test="telphone != null">
+                telphone,
+            </if>
+            <if test="address != null">
+                address,
+            </if>
+            <if test="deleted != null">
+                deleted,
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="addrId != null">
+                #{addrId,jdbcType=INTEGER},
+            </if>
+            <if test="userId != null">
+                #{userId,jdbcType=INTEGER},
+            </if>
+            <if test="name != null">
+                #{name,jdbcType=VARCHAR},
+            </if>
+            <if test="status != null">
+                #{status,jdbcType=INTEGER},
+            </if>
+            <if test="telphone != null">
+                #{telphone,jdbcType=VARCHAR},
+            </if>
+            <if test="address != null">
+                #{address,jdbcType=VARCHAR},
+            </if>
+            <if test="deleted != null">
+                #{deleted,jdbcType=INTEGER},
+            </if>
+        </trim>
+    </insert>
+</mapper>

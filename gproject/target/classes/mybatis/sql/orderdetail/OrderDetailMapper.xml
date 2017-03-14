@@ -1,0 +1,107 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.gproject.orderdetail.mapper.OrderDetailMapper">
+  <resultMap id="BaseResultMap" type="com.gproject.orderdetail.pojo.OrderDetail">
+    <id column="order_detail_id" jdbcType="INTEGER" property="orderDetailId" />
+    <result column="order_id" jdbcType="INTEGER" property="orderId" />
+    <result column="product_id" jdbcType="INTEGER" property="productId" />
+    <result column="num" jdbcType="INTEGER" property="num" />
+    <result column="product_price" jdbcType="DECIMAL" property="productPrice" />
+    <result column="sum_fee" jdbcType="DECIMAL" property="sumFee" />
+  </resultMap>
+  <sql id="Base_Column_List">
+    order_detail_id, order_id, product_id, num, product_price, sum_fee
+  </sql>
+  <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from order_detail
+    where order_detail_id = #{orderDetailId,jdbcType=INTEGER}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+    delete from order_detail
+    where order_detail_id = #{orderDetailId,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" parameterType="com.gproject.orderdetail.pojo.OrderDetail">
+    insert into order_detail (order_detail_id, order_id, product_id, 
+      num, product_price, sum_fee
+      )
+    values (#{orderDetailId,jdbcType=INTEGER}, #{orderId,jdbcType=INTEGER}, #{productId,jdbcType=INTEGER}, 
+      #{num,jdbcType=INTEGER}, #{productPrice,jdbcType=DECIMAL}, #{sumFee,jdbcType=DECIMAL}
+      )
+  </insert>
+  <insert id="insertSelective" parameterType="com.gproject.orderdetail.pojo.OrderDetail">
+    insert into order_detail
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="orderDetailId != null">
+        order_detail_id,
+      </if>
+      <if test="orderId != null">
+        order_id,
+      </if>
+      <if test="productId != null">
+        product_id,
+      </if>
+      <if test="num != null">
+        num,
+      </if>
+      <if test="productPrice != null">
+        product_price,
+      </if>
+      <if test="sumFee != null">
+        sum_fee,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="orderDetailId != null">
+        #{orderDetailId,jdbcType=INTEGER},
+      </if>
+      <if test="orderId != null">
+        #{orderId,jdbcType=INTEGER},
+      </if>
+      <if test="productId != null">
+        #{productId,jdbcType=INTEGER},
+      </if>
+      <if test="num != null">
+        #{num,jdbcType=INTEGER},
+      </if>
+      <if test="productPrice != null">
+        #{productPrice,jdbcType=DECIMAL},
+      </if>
+      <if test="sumFee != null">
+        #{sumFee,jdbcType=DECIMAL},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.gproject.orderdetail.pojo.OrderDetail">
+    update order_detail
+    <set>
+      <if test="orderId != null">
+        order_id = #{orderId,jdbcType=INTEGER},
+      </if>
+      <if test="productId != null">
+        product_id = #{productId,jdbcType=INTEGER},
+      </if>
+      <if test="num != null">
+        num = #{num,jdbcType=INTEGER},
+      </if>
+      <if test="productPrice != null">
+        product_price = #{productPrice,jdbcType=DECIMAL},
+      </if>
+      <if test="sumFee != null">
+        sum_fee = #{sumFee,jdbcType=DECIMAL},
+      </if>
+    </set>
+    where order_detail_id = #{orderDetailId,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.gproject.orderdetail.pojo.OrderDetail">
+    update order_detail
+    set order_id = #{orderId,jdbcType=INTEGER},
+      product_id = #{productId,jdbcType=INTEGER},
+      num = #{num,jdbcType=INTEGER},
+      product_price = #{productPrice,jdbcType=DECIMAL},
+      sum_fee = #{sumFee,jdbcType=DECIMAL}
+    where order_detail_id = #{orderDetailId,jdbcType=INTEGER}
+  </update>
+
+</mapper>

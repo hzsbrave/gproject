@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.gproject.orderdetail.mapper.OrderDetailCustomMapper" >
+  <resultMap id="BaseResultMap" type="com.gproject.orderdetail.pojo.OrderDetailCustom" >
+    <id column="order_detail_id" property="orderDetailId" jdbcType="INTEGER" />
+    <result column="order_id" property="orderId" jdbcType="INTEGER" />
+    <result column="product_id" property="productId" jdbcType="INTEGER" />
+    <result column="num" property="num" jdbcType="INTEGER" />
+    <result column="product_price" property="productPrice" jdbcType="DECIMAL" />
+    <result column="sum_fee" property="sumFee" jdbcType="DECIMAL" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    order_detail_id, order_id, product_id, num, product_price, sum_fee
+  </sql>
+  <insert id="insertOrderDetail"  parameterType="com.gproject.order.pojo.vo.OrderInsertVo" >
+    insert into order_detail
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="orderDetailId != null" >
+        order_detail_id,
+      </if>
+      <if test="orderId != null" >
+        order_id,
+      </if>
+      <if test="productId != null" >
+        product_id,
+      </if>
+      <if test="num != null" >
+        num,
+      </if>
+      <if test="productPrice != null" >
+        product_price,
+      </if>
+      <if test="sumFee != null" >
+        sum_fee,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="orderDetailId != null" >
+        #{orderDetailId,jdbcType=INTEGER},
+      </if>
+      <if test="orderId != null" >
+        #{orderId,jdbcType=INTEGER},
+      </if>
+      <if test="productId != null" >
+        #{productId,jdbcType=INTEGER},
+      </if>
+      <if test="num != null" >
+        #{num,jdbcType=INTEGER},
+      </if>
+      <if test="productPrice != null" >
+        #{productPrice,jdbcType=DECIMAL},
+      </if>
+      <if test="sumFee != null" >
+        #{sumFee,jdbcType=DECIMAL},
+      </if>
+    </trim>
+  </insert>
+  <insert id="insertOrderDetailBatch" parameterType="java.util.List">
+   INSERT INTO order_detail (
+	order_id,
+	product_id,
+	num,
+	product_price,
+	sum_fee
+)
+VALUE
+    <foreach collection="list" item="item" index="index" separator=",">
+      ( #{item.orderId,jdbcType=INTEGER},
+        #{item.productId,jdbcType=INTEGER},
+        #{item.num,jdbcType=INTEGER},
+        #{item.productPrice,jdbcType=DECIMAL},
+        #{item.sumFee,jdbcType=DECIMAL}
+      )
+    </foreach>
+  </insert>
+</mapper>
