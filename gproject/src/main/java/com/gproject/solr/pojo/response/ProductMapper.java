@@ -31,8 +31,10 @@ public class ProductMapper extends AbstractMapper<ProductCustom> {
             product.setSaleNum((Integer) doc.get("saleNum"));
         if (!StringUtils.isBlank(doc.get("productName") + ""))
             product.setKeyword((String) doc.get("productName"));
-        if (!StringUtils.isBlank(doc.get("productPrice") + ""))
-            product.setProductPrice(new BigDecimal((double) doc.get("productPrice")));
+        if (!StringUtils.isBlank(doc.get("productPrice") + "")){
+            String price=doc.get("productPrice")+"";
+            product.setProductPrice(new BigDecimal(price));
+        }
         if (!StringUtils.isBlank(doc.get("shortDesc") + ""))
             product.setShortDesc((String) doc.get("shortDesc"));
         if (!StringUtils.isBlank(doc.get("staticPage") + ""))
