@@ -52,8 +52,7 @@ public class OrderService extends BaseService<Order, Integer> implements OrderFa
     private RedisTemplate redisTemplate;
     @Autowired
     private SolrServerFactory factory;
-    @Autowired
-    private PayPalFacade payPalFacade;
+
 
     @Override
     protected BaseMapper<Order, Integer> getMapper() {
@@ -82,6 +81,7 @@ public class OrderService extends BaseService<Order, Integer> implements OrderFa
 
         //////////////////////////////////////////对比库存量/////////////////////////////////////
         Gson gson = new Gson();
+        int orderId=0;
         ProductCustom cacheproduct = new ProductCustom();
         for (OrderProduct product : prods) {
             //判断加入购物车的数量和库存量对比
@@ -104,7 +104,6 @@ public class OrderService extends BaseService<Order, Integer> implements OrderFa
                 Type type = new TypeToken<ProductCustom>() {
                 }.getType();
                 cacheproduct = gson.fromJson(json.toString(), type);
-
             }
             if (product.getNum() > cacheproduct.getProductNum())
                 return FAIL(ResponseType.PRODUCT_NUM_OVER, product.getProductId() + "");
@@ -120,6 +119,7 @@ public class OrderService extends BaseService<Order, Integer> implements OrderFa
             List<OrderDetailCustom> details = new ArrayList<OrderDetailCustom>();
             OrderDetailCustom custom = new OrderDetailCustom();
             //设置订单id
+            orderId=cus.getOrderId();
             custom.setOrderId(cus.getOrderId());
             vo.setOrderId(cus.getOrderId());
             for (int i = 0; i < prods.size(); i++) {
@@ -132,15 +132,12 @@ public class OrderService extends BaseService<Order, Integer> implements OrderFa
             }
             //批量插入订单详情
             orderDetailCustomMapper.insertOrderDetailBatch(details);
-            //数据插入数据库成功，将数据设置到paypal
-            object = payPalFacade.setExpressCheckout(vo);
         } catch (Exception e) {
             logger.info("insert order error.");
-
             throw new RuntimeException("insert order error.");
 
         }
-        return object;
+        return SUCCESS(orderId);
     }
 
 

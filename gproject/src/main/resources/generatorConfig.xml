@@ -18,19 +18,19 @@
             <property name="forceBigDecimals" value="false"/>  
         </javaTypeResolver>  
         <!-- 生成模型的包名和位置-->
-        <javaModelGenerator targetPackage="com.gproject.orderdetail.pojo" targetProject="src\main\java">
+        <javaModelGenerator targetPackage="com.gproject.runningaccount.pojo" targetProject="src\main\java">
             <property name="enableSubPackages" value="false"/>  
             <property name="trimStrings" value="false"/>  
         </javaModelGenerator>  
         <!-- 生成映射文件的包名和位置-->  
-        <sqlMapGenerator targetPackage="mybatis.sql.orderdetail" targetProject="src\main\resources">
+        <sqlMapGenerator targetPackage="mybatis.sql.runningaccount" targetProject="src\main\resources">
             <property name="enableSubPackages" value="false"/>  
         </sqlMapGenerator>  
         <!-- 生成DAO的包名和位置-->  
-        <javaClientGenerator type="XMLMAPPER" targetPackage="com.gproject.orderdetail.mapper" targetProject="src\main\java">
+        <javaClientGenerator type="XMLMAPPER" targetPackage="com.gproject.runningaccount.mapper" targetProject="src\main\java">
             <property name="enableSubPackages" value="false"/>  
         </javaClientGenerator>  
         <!-- 要生成哪些表-->
-		<table schema="orderdetail" tableName="order_detail" domainObjectName="OrderDetail" enableCountByExample="false"  enableUpdateByExample="false" enableDeleteByExample="false"  enableSelectByExample="false" selectByExampleQueryId="false"></table>
+		<table schema="running_account" tableName="running_account" domainObjectName="RunningAccount" enableCountByExample="false"  enableUpdateByExample="false" enableDeleteByExample="false"  enableSelectByExample="false" selectByExampleQueryId="false"></table>
 	</context>  
 </generatorConfiguration>  

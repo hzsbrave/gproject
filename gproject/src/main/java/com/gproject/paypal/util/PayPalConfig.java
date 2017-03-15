@@ -17,7 +17,8 @@ public class PayPalConfig {
 	private String signature;
 	@Value("${environment}")
 	private String environment;
-	
+
+
 	public Map<String,String> getConfig(){
 	    Map config=new HashMap<String,String>();
 	    config.put("acct1.UserName", username);

@@ -104,4 +104,5 @@
     where order_detail_id = #{orderDetailId,jdbcType=INTEGER}
   </update>
 
+
 </mapper>
