@@ -142,7 +142,7 @@ public class PayPalService  implements PayPalFacade {
                 return transactionId;
             }
         }
-        ////////////////////////////////////////////////////doExpress/////////////////////////////////////
+
         // 付款请求参数
         DoExpressCheckoutPaymentReq checkoutPaymentReq = new DoExpressCheckoutPaymentReq();
         // 付款请求参数

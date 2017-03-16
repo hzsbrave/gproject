@@ -15,6 +15,9 @@ import org.springframework.stereotype.Controller;
 import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.*;
 
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+
 /**
  * Created by Administrator on 2017/3/10.
  */
@@ -24,6 +27,7 @@ public class PayPalController {
 
     @Autowired
     private PaypalReqFacade paypalReqFacade;
+
 
     @ResponseBody
     @RequestMapping(value = "setExpressCheckOut", method = RequestMethod.POST)
@@ -37,5 +41,16 @@ public class PayPalController {
         }
 
     }
+
+    @ResponseBody
+    @RequestMapping(value = "doExpressCheckOut")
+    @ResponseStatus(HttpStatus.OK)
+    public Object doExpressCheckOut(HttpServletRequest request, HttpServletResponse response) {
+        String token=request.getParameter("token");
+        System.out.println(token);
+        Object object=paypalReqFacade.doExpressCheckOut(token);
+        return object;
+    }
+
 
 }

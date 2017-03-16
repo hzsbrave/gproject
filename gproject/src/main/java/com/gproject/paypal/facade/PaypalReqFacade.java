@@ -11,6 +11,6 @@ public interface PaypalReqFacade {
 
     public Object setExpressCheckOut(OrderQueryVo vo);
 
-    public PayPalVo doExpressCheckOut(String token);
+    public Object doExpressCheckOut(String token);
 
 }

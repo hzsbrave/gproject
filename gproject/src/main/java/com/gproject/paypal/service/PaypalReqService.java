@@ -31,7 +31,7 @@ public class PaypalReqService extends BaseService<PayPalVo,Integer>  implements 
     @Autowired
     private OrderCustomMapper orderCustomMapper;
 
-    @Override
+
     public Object setExpressCheckOut(OrderQueryVo vo) {
         PayPalVo payPalVo=new PayPalVo();
         try{
@@ -50,9 +50,19 @@ public class PaypalReqService extends BaseService<PayPalVo,Integer>  implements 
         return SUCCESS(payPalVo);
     }
 
-    @Override
-    public PayPalVo doExpressCheckOut(String token) {
-        return null;
+
+    public Object doExpressCheckOut(String token) {
+        PayPalVo payPalVo=new PayPalVo();
+        try{
+            String transactionId=payPalFacade.doCheckOutExpress(token);
+            payPalVo.setTransactionId(transactionId);
+            log.info("[PaypalReqService] doExpressCheckOut :success"+payPalVo.toString());
+        }catch (Exception e){
+            log.info("[PaypalReqService] doExpressCheckOut :fail");
+            e.printStackTrace();
+            return FAIL(ResponseType.SYSTEM_ERROR,"doExpressCheckOut :fail");
+        }
+        return SUCCESS(payPalVo);
     }
 
     @Override
