@@ -3,6 +3,7 @@ package com.gproject.shoppingcart.mapper;
 import com.gproject.shoppingcart.pojo.ShoppingCart;
 import com.gproject.shoppingcart.pojo.ShoppingCartCustom;
 import com.gproject.shoppingcart.pojo.vo.ShoppingCartQueryVo;
+import com.gproject.shoppingcart.pojo.vo.ShoppingProdVo;
 
 public interface ShoppingCartCustomMapper {
     /**
@@ -25,4 +26,6 @@ public interface ShoppingCartCustomMapper {
      * @return
      */
     public ShoppingCartCustom queryShoppingCartByUserId(Integer userId);
+
+
 }

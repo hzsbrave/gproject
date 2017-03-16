@@ -29,8 +29,7 @@ public class RunningAccountService extends BaseService<RunningAccountCustom,Inte
     private RunningAccountCustomMapper runningAccountCustomMapper;
     @Autowired
     private OrderCustomMapper orderCustomMapper;
-    @Autowired
-    private PaypalReqFacade payPalReqFacade;
+
 
     @Override
     public Object updateOrInsertRunningAccount(RunningAccountVo vo) {

@@ -1,5 +1,6 @@
 package com.gproject.paypal.facade;
 
+import com.gproject.order.pojo.OrderCustom;
 import com.gproject.order.pojo.vo.OrderDetailAll;
 import com.gproject.order.pojo.vo.OrderQueryVo;
 import com.gproject.paypal.pojo.PayPalVo;
@@ -11,6 +12,6 @@ public interface PaypalReqFacade {
 
     public Object setExpressCheckOut(OrderQueryVo vo);
 
-    public Object doExpressCheckOut(String token);
+    public Object doExpressCheckOut(String token, OrderCustom orderCustom);
 
 }

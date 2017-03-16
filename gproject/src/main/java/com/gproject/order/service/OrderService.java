@@ -14,6 +14,10 @@ import com.gproject.order.pojo.vo.OrderState;
 import com.gproject.orderdetail.mapper.OrderDetailCustomMapper;
 import com.gproject.orderdetail.pojo.OrderDetailCustom;
 import com.gproject.paypal.facade.PayPalFacade;
+import com.gproject.shoppingcart.mapper.ShoppingCartCustomMapper;
+import com.gproject.shoppingcart.pojo.ShoppingCartCustom;
+import com.gproject.shoppingcart.pojo.vo.ShoppingProdVo;
+import com.gproject.shoppingcartprods.mapper.ShoppingCartProdCustomMapper;
 import com.gproject.solr.Util.QueryUtils;
 import com.gproject.solr.base.ProductSolrIndexQueryAdapter;
 import com.gproject.solr.base.SolrIndexQuery;
@@ -52,6 +56,10 @@ public class OrderService extends BaseService<Order, Integer> implements OrderFa
     private RedisTemplate redisTemplate;
     @Autowired
     private SolrServerFactory factory;
+    @Autowired
+    private ShoppingCartCustomMapper shoppingCartCustomMapper;
+    @Autowired
+    private ShoppingCartProdCustomMapper cartProdCustomMapper;
 
 
     @Override
@@ -81,7 +89,7 @@ public class OrderService extends BaseService<Order, Integer> implements OrderFa
 
         //////////////////////////////////////////对比库存量/////////////////////////////////////
         Gson gson = new Gson();
-        int orderId=0;
+        int orderId = 0;
         ProductCustom cacheproduct = new ProductCustom();
         for (OrderProduct product : prods) {
             //判断加入购物车的数量和库存量对比
@@ -119,7 +127,7 @@ public class OrderService extends BaseService<Order, Integer> implements OrderFa
             List<OrderDetailCustom> details = new ArrayList<OrderDetailCustom>();
             OrderDetailCustom custom = new OrderDetailCustom();
             //设置订单id
-            orderId=cus.getOrderId();
+            orderId = cus.getOrderId();
             custom.setOrderId(cus.getOrderId());
             vo.setOrderId(cus.getOrderId());
             for (int i = 0; i < prods.size(); i++) {
@@ -132,6 +140,18 @@ public class OrderService extends BaseService<Order, Integer> implements OrderFa
             }
             //批量插入订单详情
             orderDetailCustomMapper.insertOrderDetailBatch(details);
+            //在购物车中删除已生成订单的商品
+            ShoppingCartCustom shoppingCartCustom = shoppingCartCustomMapper.queryShoppingCartByUserId(vo.getUserId());
+            List<ShoppingProdVo> shoppinglists = new ArrayList<ShoppingProdVo>();
+            if (shoppingCartCustom != null) {
+                for (OrderProduct product : prods) {
+                    ShoppingProdVo shoppingVo = new ShoppingProdVo();
+                    shoppingVo.setCartId(shoppingCartCustom.getCartId());
+                    shoppingVo.setProductId(product.getProductId());
+                    shoppinglists.add(shoppingVo);
+                }
+            }
+            cartProdCustomMapper.deleteShoppingProdBatch(shoppinglists);
         } catch (Exception e) {
             logger.info("insert order error.");
             throw new RuntimeException("insert order error.");

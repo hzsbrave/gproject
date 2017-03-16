@@ -6,12 +6,14 @@ import com.gproject.address.pojo.Address;
 import com.gproject.address.pojo.AddressCustom;
 import com.gproject.base.mapper.BaseMapper;
 import com.gproject.base.service.BaseService;
+import com.gproject.order.mapper.OrderCustomMapper;
 import com.gproject.order.pojo.vo.OrderDetailAll;
 import com.gproject.order.pojo.vo.OrderInsertVo;
 import com.gproject.order.pojo.vo.OrderProduct;
 import com.gproject.orderdetail.pojo.OrderDetailVo;
 import com.gproject.paypal.facade.PayPalFacade;
 import com.gproject.paypal.util.PayPalConfig;
+import com.gproject.runningaccount.mapper.RunningAccountCustomMapper;
 import com.gproject.util.message.ResponseType;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -39,6 +41,10 @@ public class PayPalService  implements PayPalFacade {
     private PayPalConfig payPalConfig;
     @Autowired
     private AddressCustomMapper addressCustomMapper;
+    @Autowired
+    private RunningAccountCustomMapper runningAccountCustomMapper;
+    @Autowired
+    private OrderCustomMapper orderCustomMapper;
     @Value("${paypal.success.url}")
     private String SUCCESS_URL;
     @Value("${paypal.cancel.url}")
@@ -96,7 +102,7 @@ public class PayPalService  implements PayPalFacade {
         details.setPaymentDetails(orders);
         details.setAllowNote("1");
         //设置成功返回的路径和取消的路径
-        String returnURL = SUCCESS_URL;
+        String returnURL = SUCCESS_URL+"?userId="+all.getUserId()+"&orderId="+all.getUserId()+"&amount="+all.getTotalFee();
         String cancelURL = CANCEL_URL;
         details.setReturnURL(returnURL);
         details.setCancelURL(cancelURL);

@@ -1,6 +1,7 @@
 package com.gproject.paypal.controller;
 
 import com.gproject.order.facade.OrderFacade;
+import com.gproject.order.pojo.OrderCustom;
 import com.gproject.order.pojo.vo.OrderDetailAll;
 import com.gproject.order.pojo.vo.OrderInsertVo;
 import com.gproject.order.pojo.vo.OrderQueryVo;
@@ -47,8 +48,15 @@ public class PayPalController {
     @ResponseStatus(HttpStatus.OK)
     public Object doExpressCheckOut(HttpServletRequest request, HttpServletResponse response) {
         String token=request.getParameter("token");
-        System.out.println(token);
-        Object object=paypalReqFacade.doExpressCheckOut(token);
+        String orderId=request.getParameter("orderId");
+        String userId=request.getParameter("userId");
+        String amount=request.getParameter("amount");
+        OrderCustom orderCustom=new OrderCustom();
+        orderCustom.setOrderId(Integer.parseInt(orderId));
+        orderCustom.setUserId(Integer.parseInt(userId));
+        orderCustom.setTotalFee(Long.getLong(amount));
+        System.out.println(token+orderId+userId+amount+"kllllllllllllllll");
+        Object object=paypalReqFacade.doExpressCheckOut(token,orderCustom);
         return object;
     }
 
