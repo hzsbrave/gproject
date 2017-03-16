@@ -5,22 +5,22 @@ package com.gproject.order.pojo.vo;
  */
 public class OrderQueryVo {
 
-    private int userId;
-    private int orderId;
+    private Integer userId;
+    private Integer orderId;
 
-    public int getUserId() {
+    public Integer getUserId() {
         return userId;
     }
 
-    public void setUserId(int userId) {
+    public void setUserId(Integer userId) {
         this.userId = userId;
     }
 
-    public int getOrderId() {
+    public Integer getOrderId() {
         return orderId;
     }
 
-    public void setOrderId(int orderId) {
+    public void setOrderId(Integer orderId) {
         this.orderId = orderId;
     }
 }

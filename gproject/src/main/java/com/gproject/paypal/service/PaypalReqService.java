@@ -36,8 +36,7 @@ public class PaypalReqService extends BaseService<PayPalVo,Integer>  implements 
         PayPalVo payPalVo=new PayPalVo();
         try{
             //根据订单id获取订单详情
-            OrderQueryVo orderQueryVo=new OrderQueryVo();
-            OrderDetailAll orderDetailAll=orderCustomMapper.selectOrderDetailAll(orderQueryVo);
+            OrderDetailAll orderDetailAll=orderCustomMapper.selectOrderDetailAll(vo);
             SetExpressCheckoutResponseType setExpressCheckoutResponseType=payPalFacade.setExpressCheckout(orderDetailAll);
             String token=setExpressCheckoutResponseType.getToken();
             payPalVo.setToken(token);
@@ -45,6 +44,7 @@ public class PaypalReqService extends BaseService<PayPalVo,Integer>  implements 
             log.info("[PaypalReqService] setExpressCheckOut :success"+payPalVo.toString());
         }catch (Exception e){
             log.info("[PaypalReqService] setExpressCheckOut :fail");
+            e.printStackTrace();
             return FAIL(ResponseType.SYSTEM_ERROR,"setExpressCheckOut :fail");
         }
         return SUCCESS(payPalVo);

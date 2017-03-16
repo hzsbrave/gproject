@@ -62,8 +62,9 @@ public class PayPalSDKController {
 	private PayPalConfig payPalConfig;
 
 	@RequestMapping("/setCheckOutExpress")
-	@ResponseBody
-	public SetExpressCheckoutResponseType setCheckOutExpress() throws Exception {
+	public void setCheckOutExpress(HttpServletRequest request, HttpServletResponse response) throws Exception {
+
+		HttpSession session = request.getSession();
 
 		PayPalAPIInterfaceServiceService service = new PayPalAPIInterfaceServiceService(payPalConfig.getConfig());
 
@@ -123,8 +124,10 @@ public class PayPalSDKController {
 		details.setPaymentDetails(orders);
 		details.setAllowNote("1");
 
-		String returnURL = "http://10.10.28.242:9000/pic/image/html/success.html";
-		String cancelURL = "http://10.10.28.242:9000/pic/image/html/cancel.html";
+		String returnURL = request.getScheme() + "://" + request.getServerName() + ":" + request.getServerPort()
+				+ request.getContextPath() + "/getCheckOutExpress.action";
+		String cancelURL = request.getScheme() + "://" + request.getServerName() + ":" + request.getServerPort()
+				+ request.getContextPath() + "/cancel";
 		details.setReturnURL(returnURL);
 		details.setCancelURL(cancelURL);
 
@@ -141,13 +144,25 @@ public class PayPalSDKController {
 		System.out.println(setExpressCheckoutResponse);
 		// 第二步：用token跳转到paypal登录页面----------------------------------
 		if (setExpressCheckoutResponse.getAck().toString().equalsIgnoreCase("SUCCESS")) {
-			System.out.println(setExpressCheckoutResponse);
-			return setExpressCheckoutResponse;
+			session.setAttribute("lastReq", service.getLastRequest());
+			session.setAttribute("lastResp", service.getLastResponse());
+			Map<Object, Object> map = new LinkedHashMap<Object, Object>();
+			map.put("当前操作：", "初始交易成功，是否登录paypal?");
+			map.put("Ack", setExpressCheckoutResponse.getAck());
+			map.put("Token", setExpressCheckoutResponse.getToken());
+			map.put("Redirect URL", "<a href=https://www.sandbox.paypal.com/cgi-bin/webscr?cmd=_express-checkout&token="
+					+ setExpressCheckoutResponse.getToken() + ">登录paypal</a>");
+			session.setAttribute("map", map);
+			response.sendRedirect(request.getScheme() + "://" + request.getServerName() + ":" + request.getServerPort()
+					+ request.getContextPath() + "/Response.jsp");
 		} else {
-			System.out.println("error");
-			return null;
+			session.setAttribute("Error", setExpressCheckoutResponse.getErrors());
+			response.sendRedirect(request.getScheme() + "://" + request.getServerName() + ":" + request.getServerPort()
+					+ request.getContextPath() + "/Error.jsp");
 		}
+
 	}
+
 
 	@RequestMapping("/getCheckOutExpress")
 	public void getCheckOutExpress(HttpServletRequest request, HttpServletResponse response) throws Exception {
@@ -171,7 +186,7 @@ public class PayPalSDKController {
 			session.setAttribute("lastReq", service.getLastRequest());
 			session.setAttribute("lastResp", service.getLastResponse());
 			if (resp.getAck().toString().equalsIgnoreCase("SUCCESS")) {
-				Map map = new HashMap<>();
+				Map map = new HashMap<Object,Object>();
 				map.put("Ack", resp.getAck());
 				map.put("Token", resp.getGetExpressCheckoutDetailsResponseDetails().getToken());
 				// Unique PayPal Customer Account identification number.
@@ -240,7 +255,7 @@ public class PayPalSDKController {
 				session.setAttribute("lastResp", service.getLastResponse());
 				if (res.getAck().toString().equalsIgnoreCase("SUCCESS")) {
 					System.out.println("do get:" + res);
-					Map resMap = new HashMap<>();
+					Map resMap = new HashMap<Object,Object>();
 					resMap.put("Ack", resp.getAck());
 					Iterator<PaymentInfoType> iterator = res.getDoExpressCheckoutPaymentResponseDetails()
 							.getPaymentInfo().iterator();

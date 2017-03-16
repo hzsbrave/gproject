@@ -61,7 +61,7 @@ public class PayPalService  implements PayPalFacade {
         List<PaymentDetailsItemType> prods = new ArrayList<PaymentDetailsItemType>();
         PaymentDetailsItemType prod = new PaymentDetailsItemType();
         //商品总价
-        BigDecimal sum = new BigDecimal(0);
+       // BigDecimal sum = new BigDecimal("0");
         //设置商品情况
         List<OrderDetailVo> detailVos = all.getOrderDetailVos();
         for (OrderDetailVo det : detailVos) {
@@ -69,13 +69,13 @@ public class PayPalService  implements PayPalFacade {
             prod.setQuantity(det.getNum());// 设置数量
             BasicAmountType amount = new BasicAmountType(CurrencyCodeType.USD, det.getProduct().getProductPrice() + "");
             prod.setAmount(amount);// 设置价格
-            sum = sum.add(det.getProduct().getProductPrice().multiply(new BigDecimal(det.getProduct().getProductName())));
+           // sum = sum.add(det.getProduct().getProductPrice().multiply(new BigDecimal(det.getNum())));
             prods.add(prod);
         }
         // 设置订单税收
         order.setHandlingTotal(new BasicAmountType(CurrencyCodeType.USD, "0.00"));// 设置手续费
         order.setShippingTotal(new BasicAmountType(CurrencyCodeType.USD, all.getExpressFee() + ""));// 设置运费
-        order.setItemTotal(new BasicAmountType(CurrencyCodeType.USD, sum + ""));// 消费产品的总价
+        order.setItemTotal(new BasicAmountType(CurrencyCodeType.USD, (all.getTotalFee()-all.getExpressFee()) + ""));// 消费产品的总价
         order.setOrderTotal(new BasicAmountType(CurrencyCodeType.USD, all.getTotalFee() + ""));// 订单的总价
         order.setTaxTotal(new BasicAmountType(CurrencyCodeType.USD, "0.00"));// 设置税收
         order.setInsuranceTotal(new BasicAmountType(CurrencyCodeType.USD, "0.00"));// 设置保险金
