@@ -71,4 +71,15 @@
        where product_id=#{productId} and cart_id=#{cartId}
    </delete>
 
+    <delete id="deleteShoppingProdBatch" parameterType="java.util.List">
+        DELETE
+        from shopping_cart_prods
+        <where>
+        <foreach collection="list" index="index" item="item" open="(" separator="or" close=")">
+           product_id=#{item.productId} and cart_id=#{item.cartId}
+        </foreach>
+        </where>
+    </delete>
+
+
 </mapper>

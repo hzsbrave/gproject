@@ -8,9 +8,7 @@ import com.gproject.order.facade.OrderFacade;
 import com.gproject.order.mapper.OrderCustomMapper;
 import com.gproject.order.pojo.Order;
 import com.gproject.order.pojo.OrderCustom;
-import com.gproject.order.pojo.vo.OrderInsertVo;
-import com.gproject.order.pojo.vo.OrderProduct;
-import com.gproject.order.pojo.vo.OrderState;
+import com.gproject.order.pojo.vo.*;
 import com.gproject.orderdetail.mapper.OrderDetailCustomMapper;
 import com.gproject.orderdetail.pojo.OrderDetailCustom;
 import com.gproject.paypal.facade.PayPalFacade;
@@ -25,8 +23,6 @@ import com.gproject.solr.base.SolrServerFactory;
 import com.gproject.solr.pojo.vo.ProductCustom;
 import com.gproject.util.message.ResponseType;
 import com.gproject.util.redis.core.RedisTemplate;
-import com.sun.deploy.util.Property;
-import org.apache.commons.beanutils.BeanUtils;
 import org.apache.commons.lang.StringUtils;
 import org.apache.solr.client.solrj.SolrQuery;
 import org.slf4j.Logger;
@@ -125,12 +121,13 @@ public class OrderService extends BaseService<Order, Integer> implements OrderFa
             orderCustomMapper.insertOrder(cus);
             //记录订单详情
             List<OrderDetailCustom> details = new ArrayList<OrderDetailCustom>();
-            OrderDetailCustom custom = new OrderDetailCustom();
+
             //设置订单id
             orderId = cus.getOrderId();
-            custom.setOrderId(cus.getOrderId());
             vo.setOrderId(cus.getOrderId());
             for (int i = 0; i < prods.size(); i++) {
+                OrderDetailCustom custom = new OrderDetailCustom();
+                custom.setOrderId(cus.getOrderId());
                 custom.setProductId(prods.get(i).getProductId());
                 custom.setNum(prods.get(i).getNum());
                 custom.setProductPrice(prods.get(i).getProductPrice());
@@ -138,6 +135,7 @@ public class OrderService extends BaseService<Order, Integer> implements OrderFa
                 custom.setSumFee(sum);
                 details.add(custom);
             }
+            System.out.println(details);
             //批量插入订单详情
             orderDetailCustomMapper.insertOrderDetailBatch(details);
             //在购物车中删除已生成订单的商品
@@ -160,6 +158,27 @@ public class OrderService extends BaseService<Order, Integer> implements OrderFa
         return SUCCESS(orderId);
     }
 
+    public Object queryOrderForUser(OrderQueryVo vo) throws Exception{
+        if (null == vo)
+            return FAIL(ResponseType.PARAMETER_NULL, "query vo is null");
+        List<OrderDetailAll> all = orderCustomMapper.queryOrderForUser(vo);
+        for (OrderDetailAll order : all) {
+            String timestamp=order.getCreateTime()+"";
+            order.setCreateTime(stampToDate(timestamp));
+        }
+        return SUCCESS(all);
+    }
+
+    /*
+ * 将时间戳转换为时间
+ */
+    public static Date stampToDate(String s)  throws Exception{
+        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+        String d = simpleDateFormat.format(new Date(s));
+        Date date=simpleDateFormat.parse(d);
+        System.out.println(date);
+        return date;
+    }
 
     private OrderCustom getOrderCustom(OrderInsertVo vo) throws Exception {
 

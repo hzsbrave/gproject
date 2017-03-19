@@ -62,4 +62,16 @@ public class OrderDetail {
     public void setSumFee(BigDecimal sumFee) {
         this.sumFee = sumFee;
     }
+
+    @Override
+    public String toString() {
+        return "OrderDetail{" +
+                "orderDetailId=" + orderDetailId +
+                ", orderId=" + orderId +
+                ", productId=" + productId +
+                ", num=" + num +
+                ", productPrice=" + productPrice +
+                ", sumFee=" + sumFee +
+                '}';
+    }
 }

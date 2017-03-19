@@ -53,7 +53,7 @@ public class RunningAccountService extends BaseService<RunningAccountCustom,Inte
                 orderCustom.setPaymentMethod(PaymentMethod.PAYMENT_ON_DELIVERY);
             }
             //支付-插入runningaccount数据库，修改order表支付方式
-            runningAccountCustomMapper.updateOrInsertRunningAccount(accountCustom);
+            runningAccountCustomMapper.insertRunningAccount(accountCustom);
             orderCustomMapper.updateByPrimaryKeySelective(orderCustom);
 
 

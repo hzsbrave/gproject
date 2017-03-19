@@ -1,5 +1,6 @@
 package com.gproject.order.pojo;
 
+import java.math.BigDecimal;
 import java.util.Date;
 
 public class Order {
@@ -14,9 +15,9 @@ public class Order {
     //订单产品数量
     private Integer prodNum;
     //订单总价：商品总价格+运费
-    private Long totalFee;
+    private BigDecimal totalFee;
    //运费
-    private Long expressFee;
+    private BigDecimal expressFee;
    //创建日期
     private Date createTime;
     /**
@@ -80,19 +81,19 @@ public class Order {
         this.prodNum = prodNum;
     }
 
-    public Long getTotalFee() {
+    public BigDecimal getTotalFee() {
         return totalFee;
     }
 
-    public void setTotalFee(Long totalFee) {
+    public void setTotalFee(BigDecimal totalFee) {
         this.totalFee = totalFee;
     }
 
-    public Long getExpressFee() {
+    public BigDecimal getExpressFee() {
         return expressFee;
     }
 
-    public void setExpressFee(Long expressFee) {
+    public void setExpressFee(BigDecimal expressFee) {
         this.expressFee = expressFee;
     }
 

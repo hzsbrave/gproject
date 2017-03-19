@@ -4,7 +4,7 @@
   "http://mybatis.org/dtd/mybatis-generator-config_1_0.dtd">  
 <generatorConfiguration>  
 <!-- 数据库驱动-->  
-    <classPathEntry  location="H:/O2OProject/O2OJAR/repository/repository/mysql/mysql-connector-java/5.1.38/mysql-connector-java-5.1.38.jar"/>
+    <classPathEntry  location="E:/maven/MavenLocalResposity/repository/repository/mysql/mysql-connector-java/5.1.38/mysql-connector-java-5.1.38.jar"/>
     <context id="DB2Tables"  targetRuntime="MyBatis3">  
         <commentGenerator>  
             <property name="suppressDate" value="true"/>  
@@ -18,19 +18,19 @@
             <property name="forceBigDecimals" value="false"/>  
         </javaTypeResolver>  
         <!-- 生成模型的包名和位置-->
-        <javaModelGenerator targetPackage="com.gproject.runningaccount.pojo" targetProject="src\main\java">
+        <javaModelGenerator targetPackage="com.gproject.complaint.pojo" targetProject="src\main\java">
             <property name="enableSubPackages" value="false"/>  
             <property name="trimStrings" value="false"/>  
         </javaModelGenerator>  
         <!-- 生成映射文件的包名和位置-->  
-        <sqlMapGenerator targetPackage="mybatis.sql.runningaccount" targetProject="src\main\resources">
+        <sqlMapGenerator targetPackage="mybatis.sql.complaint" targetProject="src\main\resources">
             <property name="enableSubPackages" value="false"/>  
         </sqlMapGenerator>  
         <!-- 生成DAO的包名和位置-->  
-        <javaClientGenerator type="XMLMAPPER" targetPackage="com.gproject.runningaccount.mapper" targetProject="src\main\java">
+        <javaClientGenerator type="XMLMAPPER" targetPackage="com.gproject.complaint.mapper" targetProject="src\main\java">
             <property name="enableSubPackages" value="false"/>  
         </javaClientGenerator>  
         <!-- 要生成哪些表-->
-		<table schema="running_account" tableName="running_account" domainObjectName="RunningAccount" enableCountByExample="false"  enableUpdateByExample="false" enableDeleteByExample="false"  enableSelectByExample="false" selectByExampleQueryId="false"></table>
+		<table schema="complaint" tableName="complaint" domainObjectName="Complaint" enableCountByExample="false"  enableUpdateByExample="false" enableDeleteByExample="false"  enableSelectByExample="false" selectByExampleQueryId="false"></table>
 	</context>  
 </generatorConfiguration>  

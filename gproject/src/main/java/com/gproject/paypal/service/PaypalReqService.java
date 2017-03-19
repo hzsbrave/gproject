@@ -68,12 +68,12 @@ public class PaypalReqService extends BaseService<PayPalVo,Integer>  implements 
             //支付-插入runningaccount数据库，修改order表支付方式
             RunningAccountCustom custom=new RunningAccountCustom();
             custom.setUserId(orderCustom.getUserId());
-            custom.setAmount(new BigDecimal(orderCustom.getTotalFee()));
+            custom.setAmount(orderCustom.getTotalFee());
             custom.setTransactionId(transactionId);
             custom.setType(RunningAccountType.PAYMENT);
             custom.setEntityId(orderCustom.getOrderId());
             orderCustom.setPaymentMethod(PaymentMethod.PAYMENT_ON_PAYPAL);
-            runningAccountCustomMapper.updateOrInsertRunningAccount(custom);
+            runningAccountCustomMapper.insertRunningAccount(custom);
             orderCustomMapper.updateByPrimaryKeySelective(orderCustom);
             log.info("[PaypalReqService] doExpressCheckOut :success"+payPalVo.toString());
         }catch (Exception e){

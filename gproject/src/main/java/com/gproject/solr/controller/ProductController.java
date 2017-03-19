@@ -55,4 +55,8 @@ public class ProductController {
         return productSolrService.checkProductNum(param);
     }
 
+
+
+
+
 }

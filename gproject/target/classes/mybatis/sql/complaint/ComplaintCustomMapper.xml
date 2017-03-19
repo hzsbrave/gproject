@@ -1,0 +1,88 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.gproject.complaint.mapper.ComplaintCustomMapper" >
+  <resultMap id="BaseResultMap" type="com.gproject.complaint.pojo.ComplaintCustom" >
+    <id column="complaint_id" property="complaintId" jdbcType="INTEGER" />
+    <result column="order_id" property="orderId" jdbcType="INTEGER" />
+    <result column="running_account_id" property="runningAccountId" jdbcType="INTEGER" />
+    <result column="complaint_desc" property="complaintDesc" jdbcType="VARCHAR" />
+    <result column="state" property="state" jdbcType="INTEGER" />
+    <result column="follow_desc" property="followDesc" jdbcType="VARCHAR" />
+    <result column="follow_time" property="followTime" jdbcType="TIMESTAMP" />
+    <result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
+    <result column="order_detail_id" property="orderDetailId" jdbcType="INTEGER" />
+    <result column="image" property="image" jdbcType="VARCHAR" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    complaint_id, order_id, running_account_id, complaint_desc, state, follow_desc, follow_time, 
+    create_time, order_detail_id, image
+  </sql>
+
+  <insert id="insertComplaint" parameterType="com.gproject.complaint.pojo.ComplaintCustom" >
+    insert into complaint
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="complaintId != null" >
+        complaint_id,
+      </if>
+      <if test="orderId != null" >
+        order_id,
+      </if>
+      <if test="runningAccountId != null" >
+        running_account_id,
+      </if>
+      <if test="complaintDesc != null" >
+        complaint_desc,
+      </if>
+      <if test="state != null" >
+        state,
+      </if>
+      <if test="followDesc != null" >
+        follow_desc,
+      </if>
+      <if test="followTime != null" >
+        follow_time,
+      </if>
+      <if test="createTime != null" >
+        create_time,
+      </if>
+      <if test="orderDetailId != null" >
+        order_detail_id,
+      </if>
+      <if test="image != null" >
+        image,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="complaintId != null" >
+        #{complaintId,jdbcType=INTEGER},
+      </if>
+      <if test="orderId != null" >
+        #{orderId,jdbcType=INTEGER},
+      </if>
+      <if test="runningAccountId != null" >
+        #{runningAccountId,jdbcType=INTEGER},
+      </if>
+      <if test="complaintDesc != null" >
+        #{complaintDesc,jdbcType=VARCHAR},
+      </if>
+      <if test="state != null" >
+        #{state,jdbcType=INTEGER},
+      </if>
+      <if test="followDesc != null" >
+        #{followDesc,jdbcType=VARCHAR},
+      </if>
+      <if test="followTime != null" >
+        #{followTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="createTime != null" >
+        #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="orderDetailId != null" >
+        #{orderDetailId,jdbcType=INTEGER},
+      </if>
+      <if test="image != null" >
+        #{image,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+</mapper>

@@ -81,7 +81,7 @@ public class PayPalService  implements PayPalFacade {
         // 设置订单税收
         order.setHandlingTotal(new BasicAmountType(CurrencyCodeType.USD, "0.00"));// 设置手续费
         order.setShippingTotal(new BasicAmountType(CurrencyCodeType.USD, all.getExpressFee() + ""));// 设置运费
-        order.setItemTotal(new BasicAmountType(CurrencyCodeType.USD, (all.getTotalFee()-all.getExpressFee()) + ""));// 消费产品的总价
+        order.setItemTotal(new BasicAmountType(CurrencyCodeType.USD, (all.getTotalFee().subtract(all.getExpressFee())) + ""));// 消费产品的总价
         order.setOrderTotal(new BasicAmountType(CurrencyCodeType.USD, all.getTotalFee() + ""));// 订单的总价
         order.setTaxTotal(new BasicAmountType(CurrencyCodeType.USD, "0.00"));// 设置税收
         order.setInsuranceTotal(new BasicAmountType(CurrencyCodeType.USD, "0.00"));// 设置保险金

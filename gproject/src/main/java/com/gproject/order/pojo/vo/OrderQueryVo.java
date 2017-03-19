@@ -7,6 +7,15 @@ public class OrderQueryVo {
 
     private Integer userId;
     private Integer orderId;
+    private Integer state;
+
+    public Integer getState() {
+        return state;
+    }
+
+    public void setState(Integer state) {
+        this.state = state;
+    }
 
     public Integer getUserId() {
         return userId;

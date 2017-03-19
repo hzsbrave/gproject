@@ -21,6 +21,14 @@
 			</list>
 		</property>
 	</bean>
+
+	<!--文件上传-->
+	<bean id="multipartResolver" class="org.springframework.web.multipart.commons.CommonsMultipartResolver">
+		<property name="maxUploadSize">
+			<value>15683640</value>
+		</property>
+	</bean>
+
 	<import resource="classpath:spring/applicationContext-datasource.xml"/>
 	<import resource="classpath:spring/applicationContext-transaction.xml"/>
 	<import resource="classpath:spring/applicationContext-redis.xml"/>

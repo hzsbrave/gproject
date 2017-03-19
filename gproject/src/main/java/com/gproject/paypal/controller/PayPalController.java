@@ -18,6 +18,7 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import java.math.BigDecimal;
 
 /**
  * Created by Administrator on 2017/3/10.
@@ -40,7 +41,6 @@ public class PayPalController {
         }catch (Exception e){
             return new ResponseMessage(ResponseType.SYSTEM_ERROR,"exception error",null,false);
         }
-
     }
 
     @ResponseBody
@@ -54,8 +54,11 @@ public class PayPalController {
         OrderCustom orderCustom=new OrderCustom();
         orderCustom.setOrderId(Integer.parseInt(orderId));
         orderCustom.setUserId(Integer.parseInt(userId));
-        orderCustom.setTotalFee(Long.getLong(amount));
-        System.out.println(token+orderId+userId+amount+"kllllllllllllllll");
+        orderCustom.setTotalFee(new BigDecimal(amount));
+        System.out.println("token:"+token);
+        System.out.println("orderId:"+orderId);
+        System.out.println("userId:"+userId);
+        System.out.println("amount:"+amount);
         Object object=paypalReqFacade.doExpressCheckOut(token,orderCustom);
         return object;
     }

@@ -2,6 +2,7 @@ package com.gproject.order.controller;
 
 import com.gproject.order.facade.OrderFacade;
 import com.gproject.order.pojo.vo.OrderInsertVo;
+import com.gproject.order.pojo.vo.OrderQueryVo;
 import com.gproject.util.message.RequestMessage;
 import com.gproject.util.message.ResponseMessage;
 import com.gproject.util.message.ResponseType;
@@ -32,6 +33,14 @@ public class OrderController {
            return new ResponseMessage(ResponseType.SYSTEM_ERROR,"exception error",null,false);
        }
 
+    }
+
+    @ResponseBody
+    @RequestMapping(value = "queryOrderForUser", method = RequestMethod.POST)
+    @ResponseStatus(HttpStatus.OK)
+    public Object queryOrderForUser(@RequestBody RequestMessage<OrderQueryVo> vo) throws Exception {
+            OrderQueryVo example=vo.getRequestContext();
+            return orderFacade.queryOrderForUser(example);
     }
 
 }

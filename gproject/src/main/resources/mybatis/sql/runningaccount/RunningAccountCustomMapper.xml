@@ -10,7 +10,7 @@
     <result column="entity_id" property="entityId" jdbcType="INTEGER" />
   </resultMap>
   <sql id="Base_Column_List" >
-    running_account_id, user_id, transaction_id, type, amount, entity_id
+    running_account_id, user_id, transaction_id, `type`, amount, entity_id
   </sql>
   <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
     select 
@@ -19,7 +19,15 @@
     where running_account_id = #{runningAccountId,jdbcType=INTEGER}
   </select>
 
-  <insert id="updateOrInsertRunningAccount" parameterType="com.gproject.runningaccount.pojo.RunningAccountCustom" >
+  <select id="selectByOrderId" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+    select
+    <include refid="Base_Column_List" />
+    from running_account
+    where entity_id = #{entityId,jdbcType=INTEGER}
+  </select>
+
+
+  <insert id="insertRunningAccount" parameterType="com.gproject.runningaccount.pojo.RunningAccountCustom" >
     insert into running_account
     <trim prefix="(" suffix=")" suffixOverrides="," >
       <if test="runningAccountId != null" >
@@ -32,7 +40,7 @@
         transaction_id,
       </if>
       <if test="type != null" >
-        type,
+        `type`,
       </if>
       <if test="amount != null" >
         amount,
@@ -49,7 +57,7 @@
         #{userId,jdbcType=INTEGER},
       </if>
       <if test="transactionId != null" >
-        #{transactionId,jdbcType=INTEGER},
+        #{transactionId,jdbcType=VARCHAR},
       </if>
       <if test="type != null" >
         #{type,jdbcType=INTEGER},
@@ -72,7 +80,7 @@
         transaction_id = #{transactionId,jdbcType=VARCHAR},
       </if>
       <if test="type != null" >
-        type = #{type,jdbcType=INTEGER},
+        `type` = #{type,jdbcType=INTEGER},
       </if>
       <if test="amount != null" >
         amount = #{amount,jdbcType=DECIMAL},
