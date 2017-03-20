@@ -112,4 +112,20 @@ public class Order {
     public void setState(Integer state) {
         this.state = state;
     }
+
+    @Override
+    public String toString() {
+        return "Order{" +
+                "orderId=" + orderId +
+                ", userId=" + userId +
+                ", addressId=" + addressId +
+                ", orderNumber='" + orderNumber + '\'' +
+                ", prodNum=" + prodNum +
+                ", totalFee=" + totalFee +
+                ", expressFee=" + expressFee +
+                ", createTime=" + createTime +
+                ", state=" + state +
+                ", paymentMethod='" + paymentMethod + '\'' +
+                '}';
+    }
 }

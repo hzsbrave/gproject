@@ -18,6 +18,11 @@
     create_time, order_detail_id, image
   </sql>
 
+  <select id="queryComplaintCondition" resultType="java.lang.Integer" parameterType="com.gproject.complaint.pojo.ComplaintCustom">
+       select count(1) from complaint where order_detail_id=#{orderDetailId} and order_id=#{orderId}
+  </select>
+
+
   <insert id="insertComplaint" parameterType="com.gproject.complaint.pojo.ComplaintCustom" >
     insert into complaint
     <trim prefix="(" suffix=")" suffixOverrides="," >

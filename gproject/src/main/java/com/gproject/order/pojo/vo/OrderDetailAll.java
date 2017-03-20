@@ -1,8 +1,6 @@
 package com.gproject.order.pojo.vo;
 
 import com.gproject.order.pojo.Order;
-import com.gproject.orderdetail.pojo.OrderDetail;
-import com.gproject.orderdetail.pojo.OrderDetailCustom;
 import com.gproject.orderdetail.pojo.OrderDetailVo;
 
 import java.util.List;
@@ -20,5 +18,12 @@ public class OrderDetailAll extends Order {
 
     public void setOrderDetailVos(List<OrderDetailVo> orderDetailVos) {
         this.orderDetailVos = orderDetailVos;
+    }
+
+    @Override
+    public String toString() {
+        return "OrderDetailAll{" +
+                "orderDetailVos=" + orderDetailVos +
+                '}';
     }
 }

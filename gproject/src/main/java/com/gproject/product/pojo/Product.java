@@ -1,6 +1,5 @@
 package com.gproject.product.pojo;
 
-import java.io.Serializable;
 import java.math.BigDecimal;
 import java.util.Date;
 
@@ -133,5 +132,24 @@ public class Product  {
 
     public void setOffSaleTime(Date offSaleTime) {
         this.offSaleTime = offSaleTime;
+    }
+
+    @Override
+    public String toString() {
+        return "Product{" +
+                "productId=" + productId +
+                ", categoryId=" + categoryId +
+                ", productName='" + productName + '\'' +
+                ", productPrice=" + productPrice +
+                ", shortDesc='" + shortDesc + '\'' +
+                ", thumbnail='" + thumbnail + '\'' +
+                ", saleNum=" + saleNum +
+                ", staticPage='" + staticPage + '\'' +
+                ", status='" + status + '\'' +
+                ", keyword='" + keyword + '\'' +
+                ", createTime=" + createTime +
+                ", onSaleTime=" + onSaleTime +
+                ", offSaleTime=" + offSaleTime +
+                '}';
     }
 }

@@ -6,7 +6,6 @@ import com.gproject.order.pojo.vo.OrderQueryVo;
 import com.gproject.util.message.RequestMessage;
 import com.gproject.util.message.ResponseMessage;
 import com.gproject.util.message.ResponseType;
-import com.sun.org.apache.bcel.internal.generic.FADD;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Controller;
@@ -41,6 +40,14 @@ public class OrderController {
     public Object queryOrderForUser(@RequestBody RequestMessage<OrderQueryVo> vo) throws Exception {
             OrderQueryVo example=vo.getRequestContext();
             return orderFacade.queryOrderForUser(example);
+    }
+
+    @ResponseBody
+    @RequestMapping(value = "queryOrderForUserRefund", method = RequestMethod.POST)
+    @ResponseStatus(HttpStatus.OK)
+    public Object queryOrderForUserRefund(@RequestBody RequestMessage<OrderQueryVo> vo) throws Exception {
+        OrderQueryVo example=vo.getRequestContext();
+        return orderFacade.queryOrderForUserRefund(example);
     }
 
 }

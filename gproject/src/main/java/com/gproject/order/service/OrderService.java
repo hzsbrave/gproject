@@ -4,6 +4,8 @@ import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import com.gproject.base.mapper.BaseMapper;
 import com.gproject.base.service.BaseService;
+import com.gproject.complaint.mapper.ComplaintCustomMapper;
+import com.gproject.complaint.pojo.ComplaintCustom;
 import com.gproject.order.facade.OrderFacade;
 import com.gproject.order.mapper.OrderCustomMapper;
 import com.gproject.order.pojo.Order;
@@ -11,6 +13,7 @@ import com.gproject.order.pojo.OrderCustom;
 import com.gproject.order.pojo.vo.*;
 import com.gproject.orderdetail.mapper.OrderDetailCustomMapper;
 import com.gproject.orderdetail.pojo.OrderDetailCustom;
+import com.gproject.orderdetail.pojo.OrderDetailVo;
 import com.gproject.paypal.facade.PayPalFacade;
 import com.gproject.shoppingcart.mapper.ShoppingCartCustomMapper;
 import com.gproject.shoppingcart.pojo.ShoppingCartCustom;
@@ -56,6 +59,8 @@ public class OrderService extends BaseService<Order, Integer> implements OrderFa
     private ShoppingCartCustomMapper shoppingCartCustomMapper;
     @Autowired
     private ShoppingCartProdCustomMapper cartProdCustomMapper;
+    @Autowired
+    private ComplaintCustomMapper complaintCustomMapper;
 
 
     @Override
@@ -166,6 +171,27 @@ public class OrderService extends BaseService<Order, Integer> implements OrderFa
             String timestamp=order.getCreateTime()+"";
             order.setCreateTime(stampToDate(timestamp));
         }
+        System.out.println(all.toString());
+        return SUCCESS(all);
+    }
+
+    public Object queryOrderForUserRefund(OrderQueryVo vo) throws Exception {
+        if (null == vo)
+            return FAIL(ResponseType.PARAMETER_NULL, "query vo is null");
+        List<OrderDetailAll> all = orderCustomMapper.queryOrderForUser(vo);
+        for (OrderDetailAll order : all) {
+            for(OrderDetailVo detail:order.getOrderDetailVos()){
+                ComplaintCustom custom=new ComplaintCustom();
+                custom.setOrderId(order.getOrderId());
+                custom.setOrderDetailId(detail.getOrderDetailId());
+                int count=complaintCustomMapper.queryComplaintCondition(custom);
+                detail.setComplaint(count);
+                detail.getProduct().setStaticPage(count+"");
+            }
+            String timestamp=order.getCreateTime()+"";
+            order.setCreateTime(stampToDate(timestamp));
+        }
+        System.out.println(all.toString());
         return SUCCESS(all);
     }
 
