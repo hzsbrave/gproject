@@ -13,15 +13,55 @@
     <result column="order_detail_id" property="orderDetailId" jdbcType="INTEGER" />
     <result column="image" property="image" jdbcType="VARCHAR" />
   </resultMap>
+  <resultMap id="ComplaintResponseResultMap" type="com.gproject.complaint.pojo.vo.ComplaintResponse" >
+    <id column="complaint_id" property="complaintId" jdbcType="INTEGER" />
+    <result column="order_id" property="orderId" jdbcType="INTEGER" />
+    <result column="product_id" property="productId" jdbcType="INTEGER" />
+    <result column="order_detail_id" property="orderDetailId" jdbcType="INTEGER" />
+    <result column="user_id" property="userId" jdbcType="INTEGER" />
+    <result column="complaint_desc" property="complaintDesc" jdbcType="VARCHAR" />
+    <result column="state" property="state" jdbcType="INTEGER" />
+    <result column="follow_desc" property="followDesc" jdbcType="VARCHAR" />
+    <result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
+    <result column="product_name" property="productName" jdbcType="VARCHAR" />
+    <result column="thumbnail" property="thumbnail" jdbcType="VARCHAR" />
+    <result column="order_number" property="orderNumber" jdbcType="VARCHAR" />
+  </resultMap>
+
+
   <sql id="Base_Column_List" >
     complaint_id, order_id, running_account_id, complaint_desc, state, follow_desc, follow_time, 
     create_time, order_detail_id, image
   </sql>
 
-  <select id="queryComplaintCondition" resultType="java.lang.Integer" parameterType="com.gproject.complaint.pojo.ComplaintCustom">
+  <select id="queryComplaintCondition" resultMap="BaseResultMap" parameterType="com.gproject.complaint.pojo.ComplaintCustom">
        select count(1) from complaint where order_detail_id=#{orderDetailId} and order_id=#{orderId}
   </select>
-
+  <select id="queryComplaintResponse" resultMap="ComplaintResponseResultMap" parameterType="java.lang.Integer">
+   SELECT
+	ord.order_id,
+	detail.product_id,
+	ord.order_number,
+  detail.order_detail_id,
+	prod.product_name,
+	prod.thumbnail,
+  com.complaint_id,
+	ord.create_time,
+	com.follow_desc,
+  ord.user_id,
+  ord.state
+FROM
+	complaint com,
+	order_detail detail,
+	`order` ord,
+	product prod
+WHERE
+	com.state in (2,3)
+AND detail.order_detail_id = com.order_detail_id
+AND detail.order_id = ord.order_id
+AND detail.product_id = prod.product_id
+and ord.user_id=#{userId}
+  </select>
 
   <insert id="insertComplaint" parameterType="com.gproject.complaint.pojo.ComplaintCustom" >
     insert into complaint
