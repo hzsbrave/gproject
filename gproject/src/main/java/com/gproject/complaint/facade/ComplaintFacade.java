@@ -9,4 +9,6 @@ public interface ComplaintFacade {
 
     Object insertComplaint(ComplaintCustom custom);
 
+    Object queryComplaintResponse(Integer userId);
+
 }

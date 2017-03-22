@@ -2,6 +2,7 @@ package com.gproject.complaint.controller;
 
 import com.gproject.complaint.facade.ComplaintFacade;
 import com.gproject.complaint.pojo.ComplaintCustom;
+import com.gproject.complaint.pojo.vo.ComplaintResponseVo;
 import com.gproject.util.message.RequestMessage;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -24,6 +25,15 @@ public class ComplaintController {
     public Object insertComplaint(@RequestBody RequestMessage<ComplaintCustom> context){
         ComplaintCustom vo=context.getRequestContext();
         Object obj=complaintFacade.insertComplaint(vo);
+        return obj;
+    }
+
+    @ResponseBody
+    @RequestMapping(value = "queryComplaintResponse",method = RequestMethod.POST)
+    @ResponseStatus(HttpStatus.OK)
+    public Object queryComplaintResponse(@RequestBody RequestMessage<ComplaintResponseVo> context){
+        ComplaintResponseVo vo=context.getRequestContext();
+        Object obj=complaintFacade.queryComplaintResponse(vo.getUserId());
         return obj;
     }
 
