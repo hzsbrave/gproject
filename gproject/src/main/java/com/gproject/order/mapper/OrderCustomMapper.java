@@ -19,4 +19,6 @@ public interface OrderCustomMapper {
 
     public List<OrderDetailAll> queryOrderForUser(OrderQueryVo vo);
 
+    public List<OrderDetailAll> queryOrderCustomService(Integer userId);
+
 }
