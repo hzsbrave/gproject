@@ -59,6 +59,18 @@
                 <result column="on_sale_time" jdbcType="TIMESTAMP" property="onSaleTime"/>
                 <result column="off_sale_time" jdbcType="TIMESTAMP" property="offSaleTime"/>
             </association>
+            <association property="complaint" javaType="com.gproject.complaint.pojo.ComplaintCustom" >
+                <id column="complaint_id" property="complaintId" jdbcType="INTEGER" />
+                <result column="order_id" property="orderId" jdbcType="INTEGER" />
+                <result column="running_account_id" property="runningAccountId" jdbcType="INTEGER" />
+                <result column="complaint_desc" property="complaintDesc" jdbcType="VARCHAR" />
+                <result column="state" property="state" jdbcType="INTEGER" />
+                <result column="follow_desc" property="followDesc" jdbcType="VARCHAR" />
+                <result column="follow_time" property="followTime" jdbcType="TIMESTAMP" />
+                <result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
+                <result column="order_detail_id" property="orderDetailId" jdbcType="INTEGER" />
+                <result column="image" property="image" jdbcType="VARCHAR" />
+            </association>
         </collection>
     </resultMap>
 
@@ -86,6 +98,67 @@
             AND ord.user_id = #{userId}
         </if>
     </select>
+
+    <select id="queryOrderCustomService" resultMap="OrderDetailAllResultMap" parameterType="java.lang.Integer">
+        SELECT
+	ord.order_id,
+	ord.user_id,
+	ord.prod_num,
+	ord.total_fee,
+	ord.order_number,
+	ord.express_fee,
+	ord.create_time,
+	detail.num,
+	detail.order_detail_id,
+	detail.sum_fee,
+	prod.product_name,
+	prod.short_desc,
+	prod.product_id,
+	prod.thumbnail,
+	prod.product_price,
+	complaint.state
+FROM
+	`order` ord,
+	order_detail detail,
+	product prod,
+  complaint
+WHERE
+	ord.order_id = detail.order_id
+AND detail.product_id = prod.product_id
+AND ord.user_id = #{userId}
+AND ord.state = 7
+AND  complaint.order_detail_id = detail.order_detail_id
+
+UNION
+
+SELECT
+	ord.order_id,
+	ord.user_id,
+	ord.prod_num,
+	ord.total_fee,
+	ord.order_number,
+	ord.express_fee,
+	ord.create_time,
+	detail.num,
+	detail.order_detail_id,
+	detail.sum_fee,
+	prod.product_name,
+	prod.short_desc,
+	prod.product_id,
+	prod.thumbnail,
+	prod.product_price,
+			0 as state
+		FROM
+			`order` ord,
+			order_detail detail,
+		  product prod
+		WHERE
+			ord.user_id = #{userId}
+		AND detail.order_id = ord.order_id
+    AND prod.product_id=detail.product_id
+AND NOT EXISTS (SELECT 1 FROM complaint c where c.order_detail_id = detail.order_detail_id)
+    </select>
+
 
     <select id="queryOrderForUser" parameterType="com.gproject.order.pojo.vo.OrderQueryVo"
             resultMap="OrderDetailAllResultMap">
