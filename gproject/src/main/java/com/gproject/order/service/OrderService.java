@@ -175,22 +175,10 @@ public class OrderService extends BaseService<Order, Integer> implements OrderFa
         return SUCCESS(all);
     }
 
-    public Object queryOrderForUserRefund(OrderQueryVo vo) throws Exception {
+    public Object queryOrderForUserCustomerService(OrderQueryVo vo) throws Exception {
         if (null == vo)
             return FAIL(ResponseType.PARAMETER_NULL, "query vo is null");
-        List<OrderDetailAll> all = orderCustomMapper.queryOrderForUser(vo);
-        for (OrderDetailAll order : all) {
-            for(OrderDetailVo detail:order.getOrderDetailVos()){
-                ComplaintCustom custom=new ComplaintCustom();
-                custom.setOrderId(order.getOrderId());
-                custom.setOrderDetailId(detail.getOrderDetailId());
-                int count=complaintCustomMapper.queryComplaintCondition(custom);
-                detail.setComplaint(count);
-                detail.getProduct().setStaticPage(count+"");
-            }
-            String timestamp=order.getCreateTime()+"";
-            order.setCreateTime(stampToDate(timestamp));
-        }
+        List<OrderDetailAll> all = orderCustomMapper.queryOrderCustomService(vo.getUserId());
         System.out.println(all.toString());
         return SUCCESS(all);
     }

@@ -59,6 +59,18 @@
                 <result column="on_sale_time" jdbcType="TIMESTAMP" property="onSaleTime"/>
                 <result column="off_sale_time" jdbcType="TIMESTAMP" property="offSaleTime"/>
             </association>
+            <association property="complaint" javaType="com.gproject.complaint.pojo.ComplaintCustom" >
+                <id column="complaint_id" property="complaintId" jdbcType="INTEGER" />
+                <result column="order_id" property="orderId" jdbcType="INTEGER" />
+                <result column="running_account_id" property="runningAccountId" jdbcType="INTEGER" />
+                <result column="complaint_desc" property="complaintDesc" jdbcType="VARCHAR" />
+                <result column="state" property="state" jdbcType="INTEGER" />
+                <result column="follow_desc" property="followDesc" jdbcType="VARCHAR" />
+                <result column="follow_time" property="followTime" jdbcType="TIMESTAMP" />
+                <result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
+                <result column="order_detail_id" property="orderDetailId" jdbcType="INTEGER" />
+                <result column="image" property="image" jdbcType="VARCHAR" />
+            </association>
         </collection>
     </resultMap>
 

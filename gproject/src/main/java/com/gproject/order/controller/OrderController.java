@@ -43,11 +43,11 @@ public class OrderController {
     }
 
     @ResponseBody
-    @RequestMapping(value = "queryOrderForUserRefund", method = RequestMethod.POST)
+    @RequestMapping(value = "queryOrderForUserCustomerService", method = RequestMethod.POST)
     @ResponseStatus(HttpStatus.OK)
-    public Object queryOrderForUserRefund(@RequestBody RequestMessage<OrderQueryVo> vo) throws Exception {
+    public Object queryOrderForUserCustomerService(@RequestBody RequestMessage<OrderQueryVo> vo) throws Exception {
         OrderQueryVo example=vo.getRequestContext();
-        return orderFacade.queryOrderForUserRefund(example);
+        return orderFacade.queryOrderForUserCustomerService(example);
     }
 
 }

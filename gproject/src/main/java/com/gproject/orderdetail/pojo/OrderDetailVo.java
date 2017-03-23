@@ -1,5 +1,6 @@
 package com.gproject.orderdetail.pojo;
 
+import com.gproject.complaint.pojo.Complaint;
 import com.gproject.product.pojo.Product;
 
 /**
@@ -10,13 +11,13 @@ public class OrderDetailVo extends OrderDetailCustom {
     private Product product;
 
 
-    private int complaint;
+    private Complaint complaint;
 
-    public int isComplaint() {
+    public Complaint getComplaint() {
         return complaint;
     }
 
-    public void setComplaint(int complaint) {
+    public void setComplaint(Complaint complaint) {
         this.complaint = complaint;
     }
 
