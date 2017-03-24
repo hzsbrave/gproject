@@ -1,14 +1,16 @@
 package com.gproject.user.controller;
 
+import com.gproject.common.facade.UploadFacade;
+import com.gproject.user.facade.UserFacade;
 import com.gproject.user.pojo.User;
 import com.gproject.user.pojo.vo.UserExample;
 import com.gproject.user.pojo.vo.UserTokenVo;
-import com.gproject.user.service.UserService;
 import com.gproject.util.message.RequestMessage;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 
 /**
@@ -23,7 +25,9 @@ import org.springframework.web.bind.annotation.*;
 public class UserController {
 
     @Autowired
-    private UserService userService;
+    private UserFacade userService;
+    @Autowired
+    private UploadFacade uploadFacade;
 
     @ResponseBody
     @RequestMapping(value = "register", method = RequestMethod.POST)
@@ -71,6 +75,29 @@ public class UserController {
     public Object checkUserToken(@RequestBody RequestMessage<UserTokenVo> context)  throws  Exception {
         UserTokenVo example=context.getRequestContext();
         return userService.checkUserToken(example.getAccount(),example.getUserToken());
+    }
+
+    @ResponseBody
+    @RequestMapping(value = "updateUserInfoImage", method = RequestMethod.POST)
+    @ResponseStatus(HttpStatus.OK)
+    public Object updateUserInfoImage(User user, MultipartFile file)  throws  Exception {
+        return userService.updateUserInfoImage(user,file);
+    }
+
+    @ResponseBody
+    @RequestMapping(value = "updateUserInfo", method = RequestMethod.POST)
+    @ResponseStatus(HttpStatus.OK)
+    public Object updateUserInfo(@RequestBody RequestMessage<User>  user)  throws  Exception {
+        User example=user.getRequestContext();
+        return userService.updateUserInfo(example);
+    }
+
+    @ResponseBody
+    @RequestMapping(value = "queryUserInfo", method = RequestMethod.POST)
+    @ResponseStatus(HttpStatus.OK)
+    public Object queryUserInfo(@RequestBody RequestMessage<User>  user)  throws  Exception {
+        User example=user.getRequestContext();
+        return userService.queryUserById(example.getUserId());
     }
 
 

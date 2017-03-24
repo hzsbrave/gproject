@@ -1,5 +1,6 @@
 package com.gproject.user.pojo;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import com.gproject.base.pojo.BasePojo;
 
 import java.util.Date;
@@ -73,6 +74,7 @@ public class User extends BasePojo {
         this.sex = sex;
     }
 
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd")
     public Date getBirthday() {
         return birthday;
     }

@@ -26,4 +26,7 @@ public interface UserMapperCustom extends BaseMapper<User, Integer> {
 
      int updatePasswordByEmail(User user);
 
+    int updateByPrimaryKeySelective(User user);
+
+    User selectByPrimaryKey(Integer userId);
 }

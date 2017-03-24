@@ -3,11 +3,14 @@ package com.gproject.user.service;
 
 import com.gproject.base.mapper.BaseMapper;
 import com.gproject.base.service.BaseService;
+import com.gproject.common.facade.UploadFacade;
 import com.gproject.email.facade.EmailFacade;
 import com.gproject.user.facade.UserFacade;
 import com.gproject.user.mapper.UserMapperCustom;
 import com.gproject.user.pojo.User;
+import com.gproject.user.pojo.vo.UserExample;
 import com.gproject.util.common.UserUtil;
+import com.gproject.util.message.ResponseMessage;
 import com.gproject.util.message.ResponseType;
 import com.gproject.util.redis.core.RedisTemplate;
 import org.apache.commons.lang.StringUtils;
@@ -15,6 +18,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -39,6 +43,9 @@ public class UserService extends BaseService<User, Integer> implements UserFacad
 
     @Autowired
     private RedisTemplate redisTemplate;
+
+    @Autowired
+    private UploadFacade uploadFacade;
 
 
     @Override
@@ -86,9 +93,9 @@ public class UserService extends BaseService<User, Integer> implements UserFacad
             logger.info("the password is not error.");
             return FAIL(ResponseType.PARAMETER_ERROR, "the password is not error");
         }
-        if (userUtil.isNullToken(account.trim()+ "login")) {
+        if (userUtil.isNullToken(account.trim() + "login")) {
             //用户token为空，产生token
-            userUtil.generateUserToken(account.trim()+ "login");
+            userUtil.generateUserToken(account.trim() + "login");
         }
         String userToken = (String) redisTemplate.get(account.trim() + "login");
         queryuser.setToken(userToken);
@@ -162,6 +169,44 @@ public class UserService extends BaseService<User, Integer> implements UserFacad
         return SUCCESS();
     }
 
+    public Object updateUserInfoImage(User example, MultipartFile file) {
+        if (null == example)
+            return FAIL(ResponseType.PARAMETER_NULL, "update user info is null");
+        try {
+            if (file != null) {
+                ResponseMessage response = (ResponseMessage) uploadFacade.uploadPicture(file);
+                if (response.getCode() == 0) {
+                    String path = (String) response.getResult();
+                    example.setImage(path);
+                }
+            }
+            userMapperCustom.updateByPrimaryKeySelective(example);
+        } catch (Exception e) {
+
+            throw new RuntimeException();
+        }
+        return SUCCESS(example);
+    }
+
+    public Object updateUserInfo(User example) {
+        if (null == example)
+            return FAIL(ResponseType.PARAMETER_NULL, "update user info is null");
+        try {
+            userMapperCustom.updateByPrimaryKeySelective(example);
+        } catch (Exception e) {
+            throw new RuntimeException();
+        }
+        return SUCCESS(example);
+    }
+
+    public Object queryUserById(Integer userId) {
+        if (null == userId)
+            return FAIL(ResponseType.PARAMETER_NULL," query user info is null");
+        User user=userMapperCustom.selectByPrimaryKey(userId);
+        if(user==null)
+            return FAIL(ResponseType.PARAMETER_NULL," query user info is null");
+        return SUCCESS(user);
+    }
 
     @Override
     protected BaseMapper<User, Integer> getMapper() {

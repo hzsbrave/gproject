@@ -2,6 +2,7 @@ package com.gproject.user.facade;
 
 
 import com.gproject.user.pojo.User;
+import org.springframework.web.multipart.MultipartFile;
 
 /**
  * modify by hezishan
@@ -60,5 +61,12 @@ public interface UserFacade {
      * @return
      */
     public Object checkUserToken(String account,String usrToken);
+
+
+    public Object updateUserInfoImage(User example, MultipartFile file);
+
+    public Object updateUserInfo(User example);
+
+    public Object queryUserById(Integer userId);
 
 }
