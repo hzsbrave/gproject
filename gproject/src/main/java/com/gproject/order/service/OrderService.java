@@ -5,7 +5,6 @@ import com.google.gson.reflect.TypeToken;
 import com.gproject.base.mapper.BaseMapper;
 import com.gproject.base.service.BaseService;
 import com.gproject.complaint.mapper.ComplaintCustomMapper;
-import com.gproject.complaint.pojo.ComplaintCustom;
 import com.gproject.order.facade.OrderFacade;
 import com.gproject.order.mapper.OrderCustomMapper;
 import com.gproject.order.pojo.Order;
@@ -13,8 +12,6 @@ import com.gproject.order.pojo.OrderCustom;
 import com.gproject.order.pojo.vo.*;
 import com.gproject.orderdetail.mapper.OrderDetailCustomMapper;
 import com.gproject.orderdetail.pojo.OrderDetailCustom;
-import com.gproject.orderdetail.pojo.OrderDetailVo;
-import com.gproject.paypal.facade.PayPalFacade;
 import com.gproject.shoppingcart.mapper.ShoppingCartCustomMapper;
 import com.gproject.shoppingcart.pojo.ShoppingCartCustom;
 import com.gproject.shoppingcart.pojo.vo.ShoppingProdVo;
@@ -163,12 +160,12 @@ public class OrderService extends BaseService<Order, Integer> implements OrderFa
         return SUCCESS(orderId);
     }
 
-    public Object queryOrderForUser(OrderQueryVo vo) throws Exception{
+    public Object queryOrderForUser(OrderQueryVo vo) throws Exception {
         if (null == vo)
             return FAIL(ResponseType.PARAMETER_NULL, "query vo is null");
         List<OrderDetailAll> all = orderCustomMapper.queryOrderForUser(vo);
         for (OrderDetailAll order : all) {
-            String timestamp=order.getCreateTime()+"";
+            String timestamp = order.getCreateTime() + "";
             order.setCreateTime(stampToDate(timestamp));
         }
         System.out.println(all.toString());
@@ -183,13 +180,22 @@ public class OrderService extends BaseService<Order, Integer> implements OrderFa
         return SUCCESS(all);
     }
 
+    @Override
+    public Object queryOrderDetailByOrderId(OrderQueryVo vo) throws Exception {
+        if (null == vo)
+            return FAIL(ResponseType.PARAMETER_NULL, "query vo is null");
+        OrderDetailEx all = orderCustomMapper.queryOrderDetailByOrderId(vo.getOrderId());
+        System.out.println(all.toString());
+        return SUCCESS(all);
+    }
+
     /*
  * 将时间戳转换为时间
  */
-    public static Date stampToDate(String s)  throws Exception{
+    public static Date stampToDate(String s) throws Exception {
         SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
         String d = simpleDateFormat.format(new Date(s));
-        Date date=simpleDateFormat.parse(d);
+        Date date = simpleDateFormat.parse(d);
         System.out.println(date);
         return date;
     }

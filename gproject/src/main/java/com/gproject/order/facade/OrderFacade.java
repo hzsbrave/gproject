@@ -12,4 +12,6 @@ public interface OrderFacade {
 
     public Object queryOrderForUser(OrderQueryVo vo) throws Exception;
     public Object queryOrderForUserCustomerService(OrderQueryVo vo) throws Exception;
+
+    public Object queryOrderDetailByOrderId(OrderQueryVo vo) throws Exception;
 }

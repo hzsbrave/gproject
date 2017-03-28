@@ -59,20 +59,70 @@
                 <result column="on_sale_time" jdbcType="TIMESTAMP" property="onSaleTime"/>
                 <result column="off_sale_time" jdbcType="TIMESTAMP" property="offSaleTime"/>
             </association>
-            <association property="complaint" javaType="com.gproject.complaint.pojo.ComplaintCustom" >
-                <id column="complaint_id" property="complaintId" jdbcType="INTEGER" />
-                <result column="order_id" property="orderId" jdbcType="INTEGER" />
-                <result column="running_account_id" property="runningAccountId" jdbcType="INTEGER" />
-                <result column="complaint_desc" property="complaintDesc" jdbcType="VARCHAR" />
-                <result column="state" property="state" jdbcType="INTEGER" />
-                <result column="follow_desc" property="followDesc" jdbcType="VARCHAR" />
-                <result column="follow_time" property="followTime" jdbcType="TIMESTAMP" />
-                <result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
-                <result column="order_detail_id" property="orderDetailId" jdbcType="INTEGER" />
-                <result column="image" property="image" jdbcType="VARCHAR" />
+            <association property="complaint" javaType="com.gproject.complaint.pojo.ComplaintCustom">
+                <id column="complaint_id" property="complaintId" jdbcType="INTEGER"/>
+                <result column="order_id" property="orderId" jdbcType="INTEGER"/>
+                <result column="running_account_id" property="runningAccountId" jdbcType="INTEGER"/>
+                <result column="complaint_desc" property="complaintDesc" jdbcType="VARCHAR"/>
+                <result column="state" property="state" jdbcType="INTEGER"/>
+                <result column="follow_desc" property="followDesc" jdbcType="VARCHAR"/>
+                <result column="follow_time" property="followTime" jdbcType="TIMESTAMP"/>
+                <result column="create_time" property="createTime" jdbcType="TIMESTAMP"/>
+                <result column="order_detail_id" property="orderDetailId" jdbcType="INTEGER"/>
+                <result column="image" property="image" jdbcType="VARCHAR"/>
             </association>
         </collection>
     </resultMap>
+
+
+    <resultMap id="OrderDetailResultMap" type="com.gproject.order.pojo.vo.OrderDetailEx">
+        <id column="order_id" property="orderId" jdbcType="INTEGER"/>
+        <result column="user_id" property="userId" jdbcType="INTEGER"/>
+        <result column="address_id" property="addressId" jdbcType="INTEGER"/>
+        <result column="order_number" property="orderNumber" jdbcType="VARCHAR"/>
+        <result column="prod_num" property="prodNum" jdbcType="INTEGER"/>
+        <result column="total_fee" property="totalFee" jdbcType="DECIMAL"/>
+        <result column="express_fee" property="expressFee" jdbcType="DECIMAL"/>
+        <result column="create_time" property="createTime" jdbcType="TIMESTAMP"/>
+        <result column="state" property="state" jdbcType="INTEGER"/>
+        <result column="payment_method" property="paymentMethod" jdbcType="VARCHAR"/>
+        <association property="address" javaType="com.gproject.address.pojo.Address">
+            <id column="addr_id" property="addrId" jdbcType="INTEGER"/>
+            <result column="user_id" property="userId" jdbcType="INTEGER"/>
+            <result column="status" property="status" jdbcType="INTEGER"/>
+            <result column="telphone" property="telphone" jdbcType="VARCHAR"/>
+            <result column="address" property="address" jdbcType="VARCHAR"/>
+            <result column="deleted" property="deleted" jdbcType="INTEGER"/>
+            <result column="name" property="name" jdbcType="VARCHAR" />
+        </association>
+        <!--一个订单对应多个订单详情-->
+        <collection property="orderDetailVos" ofType="com.gproject.orderdetail.pojo.OrderDetailVo">
+            <id column="order_detail_id" property="orderDetailId" jdbcType="INTEGER"/>
+            <result column="order_id" property="orderId" jdbcType="INTEGER"/>
+            <result column="product_id" property="productId" jdbcType="INTEGER"/>
+            <result column="num" property="num" jdbcType="INTEGER"/>
+            <result column="product_price" property="productPrice" jdbcType="DECIMAL"/>
+            <result column="sum_fee" property="sumFee" jdbcType="DECIMAL"/>
+            <!--一个订单详情对应一个商品情况-->
+            <association property="product" javaType="com.gproject.product.pojo.Product">
+                <id column="product_id" jdbcType="INTEGER" property="productId"/>
+                <result column="category_id" jdbcType="INTEGER" property="categoryId"/>
+                <result column="product_name" jdbcType="VARCHAR" property="productName"/>
+                <result column="product_price" jdbcType="DECIMAL" property="productPrice"/>
+                <result column="short_desc" jdbcType="VARCHAR" property="shortDesc"/>
+                <result column="thumbnail" jdbcType="VARCHAR" property="thumbnail"/>
+                <result column="sale_num" jdbcType="INTEGER" property="saleNum"/>
+                <result column="static_page" jdbcType="VARCHAR" property="staticPage"/>
+                <result column="status" jdbcType="VARCHAR" property="status"/>
+                <result column="keyword" jdbcType="VARCHAR" property="keyword"/>
+                <result column="create_time" jdbcType="TIMESTAMP" property="createTime"/>
+                <result column="on_sale_time" jdbcType="TIMESTAMP" property="onSaleTime"/>
+                <result column="off_sale_time" jdbcType="TIMESTAMP" property="offSaleTime"/>
+            </association>
+        </collection>
+    </resultMap>
+
+
 
     <select id="selectOrderDetailAll" resultMap="OrderDetailAllResultMap"
             parameterType="com.gproject.order.pojo.vo.OrderQueryVo">
@@ -162,34 +212,71 @@ AND NOT EXISTS (SELECT 1 FROM complaint c where c.order_detail_id = detail.order
 
     <select id="queryOrderForUser" parameterType="com.gproject.order.pojo.vo.OrderQueryVo"
             resultMap="OrderDetailAllResultMap">
-         SELECT
-ord.order_id,
- ord.user_id,
- ord.prod_num,
- ord.total_fee,
- ord.order_number,
- ord.express_fee,
- ord.create_time,
- detail.num,
- detail.order_detail_id,
- detail.sum_fee,
- prod.product_name,
- prod.short_desc,
- prod.product_id,
- prod.thumbnail,
- prod.product_price
-FROM
-	`order` ord,
-	order_detail detail,
-  product prod
-WHERE
-	ord.order_id = detail.order_id and detail.product_id=prod.product_id
+        SELECT
+        ord.order_id,
+        ord.address_id,
+        ord.user_id,
+        ord.prod_num,
+        ord.total_fee,
+        ord.order_number,
+        ord.express_fee,
+        ord.create_time,
+        detail.num,
+        detail.order_detail_id,
+        detail.sum_fee,
+        prod.product_name,
+        prod.short_desc,
+        prod.product_id,
+        prod.thumbnail,
+        prod.product_price
+        FROM
+        `order` ord,
+        order_detail detail,
+        product prod
+        WHERE
+        ord.order_id = detail.order_id and detail.product_id=prod.product_id
         <if test="state != null">
             AND ord.state = #{state}
         </if>
         <if test="userId!=null">
             AND ord.user_id = #{userId}
         </if>
+    </select>
+
+
+    <select id="queryOrderDetailByOrderId" parameterType="java.lang.Integer" resultMap="OrderDetailResultMap">
+SELECT
+	ord.order_id,
+	ord.address_id,
+	ord.user_id,
+	ord.prod_num,
+	ord.total_fee,
+	ord.order_number,
+	ord.express_fee,
+	ord.create_time,
+  ord.payment_method,
+	detail.num,
+	detail.order_detail_id,
+	detail.sum_fee,
+	prod.product_name,
+	prod.short_desc,
+	prod.product_id,
+	prod.thumbnail,
+	prod.product_price,
+  addr.`name`,
+  addr.telphone,
+  addr.address
+FROM
+	`order` ord,
+	order_detail detail,
+	product prod,
+  address addr
+WHERE
+	ord.order_id = detail.order_id
+AND detail.product_id = prod.product_id
+and ord.order_id=#{order_id}
+and addr.addr_id=ord.address_id
+
     </select>
 
 

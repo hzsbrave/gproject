@@ -65,7 +65,7 @@ public class OrderDetail {
 
     @Override
     public String toString() {
-        return "OrderDetail{" +
+        return "OrderDetailEx{" +
                 "orderDetailId=" + orderDetailId +
                 ", orderId=" + orderId +
                 ", productId=" + productId +

@@ -50,4 +50,13 @@ public class OrderController {
         return orderFacade.queryOrderForUserCustomerService(example);
     }
 
+    @ResponseBody
+    @RequestMapping(value = "queryOrderDetailByOrderId", method = RequestMethod.POST)
+    @ResponseStatus(HttpStatus.OK)
+    public Object queryOrderDetailByOrderId(@RequestBody RequestMessage<OrderQueryVo> vo) throws Exception {
+        OrderQueryVo example=vo.getRequestContext();
+        return orderFacade.queryOrderDetailByOrderId(example);
+    }
+
+
 }

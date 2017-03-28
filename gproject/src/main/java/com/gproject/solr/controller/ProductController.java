@@ -1,5 +1,7 @@
 package com.gproject.solr.controller;
 
+import com.gproject.solr.pojo.query.History;
+import com.gproject.solr.pojo.query.HistoryVO;
 import com.gproject.solr.pojo.query.ProductDetailQueryVo;
 import com.gproject.solr.pojo.query.SeachParam;
 import com.gproject.solr.service.ProductSolrService;
@@ -9,6 +11,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 /**
  * SolrController.java
@@ -56,6 +60,13 @@ public class ProductController {
     }
 
 
+    @ResponseBody
+    @RequestMapping(value = "searchHistoryProds", method = RequestMethod.POST)
+    @ResponseStatus(HttpStatus.OK)
+    public Object searchHistoryProds(@RequestBody RequestMessage<HistoryVO> context) throws Exception{
+        HistoryVO param=context.getRequestContext();
+        return productSolrService.searchHistoryProduct(param.getHistorys());
+    }
 
 
 
