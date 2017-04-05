@@ -60,7 +60,7 @@ public class RunningAccountService extends BaseService<RunningAccountCustom,Inte
         }catch (Exception e){
 
         }
-        return null;
+        return SUCCESS();
     }
     @Override
     protected BaseMapper<RunningAccountCustom, Integer> getMapper() {

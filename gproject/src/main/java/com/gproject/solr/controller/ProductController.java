@@ -48,7 +48,7 @@ public class ProductController {
     @ResponseStatus(HttpStatus.OK)
     public Object searchProdsById(@RequestBody RequestMessage<SeachParam> context) throws Exception{
         SeachParam param=context.getRequestContext();
-        return productSolrService.searchProductById(param.getProductId());
+        return productSolrService.searchProductById(param.getProductId(),param.getUserId());
     }
 
     @ResponseBody
@@ -68,6 +68,12 @@ public class ProductController {
         return productSolrService.searchHistoryProduct(param.getHistorys());
     }
 
-
+    @ResponseBody
+    @RequestMapping(value = "searchRecommendProds", method = RequestMethod.POST)
+    @ResponseStatus(HttpStatus.OK)
+    public Object searchRecommendProds(@RequestBody RequestMessage<SeachParam> context) throws Exception{
+        SeachParam param=context.getRequestContext();
+        return productSolrService.searchRecommendProds(param);
+    }
 
 }

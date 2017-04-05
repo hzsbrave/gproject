@@ -42,6 +42,7 @@ public class OrderController {
             return orderFacade.queryOrderForUser(example);
     }
 
+
     @ResponseBody
     @RequestMapping(value = "queryOrderForUserCustomerService", method = RequestMethod.POST)
     @ResponseStatus(HttpStatus.OK)

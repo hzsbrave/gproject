@@ -7,6 +7,12 @@ import com.gproject.base.service.BaseService;
 import com.gproject.category.mapper.CategoryMapperCustom;
 import com.gproject.category.pojo.CategoryCustom;
 import com.gproject.category.pojo.vo.CategoryExample;
+import com.gproject.categoryrecommend.mapper.CategoryRecommendCustomMapper;
+import com.gproject.categoryrecommend.pojo.CategoryRecommendCustom;
+import com.gproject.product.pojo.Product;
+import com.gproject.recommend.facade.RecommendFacade;
+import com.gproject.recommend.mapper.RecommendCustomMapper;
+import com.gproject.recommend.pojo.RecommendCustom;
 import com.gproject.shoppingcartprods.mapper.ShoppingCartProdCustomMapper;
 import com.gproject.shoppingcartprods.pojo.ShoppingCartProdCustom;
 import com.gproject.solr.pojo.query.*;
@@ -47,6 +53,12 @@ public class ProductSolrService extends BaseService<ProductCustom, Integer> impl
     private CategoryMapperCustom categoryMapperCustom;
     @Autowired
     private ShoppingCartProdCustomMapper shoppingCartProdCustomMapper;
+    @Autowired
+    private RecommendFacade recommendFacade;
+    @Autowired
+    private RecommendCustomMapper recommendCustomMapper;
+    @Autowired
+    private CategoryRecommendCustomMapper categoryMapper;
 
     public Object searchProduct(SeachParam param) throws Exception {
         if (null == param)
@@ -59,7 +71,7 @@ public class ProductSolrService extends BaseService<ProductCustom, Integer> impl
             keyword = "all";
         }
         //从redis中读取数据
-        String json = (String) redisTemplate.get(keyword+param.getPriceFlag()+param.getSaleFlag());
+        String json = (String) redisTemplate.get(keyword + param.getPriceFlag() + param.getSaleFlag());
         if (StringUtils.isBlank(json)) {
             SolrQuery query = QueryUtils.buildProductSearchQuery(param);
             SolrIndexQuery solrIndexQuery = new ProductSolrIndexQueryAdapter(factory.getProductServer()).query(query);
@@ -68,7 +80,7 @@ public class ProductSolrService extends BaseService<ProductCustom, Integer> impl
             prods = handlerSalesNum(prods);
             System.out.println(prods);
             //放入redis缓存
-            redisTemplate.set(keyword+param.getPriceFlag()+param.getSaleFlag(), gson.toJson(prods), 43200);
+            redisTemplate.set(keyword + param.getPriceFlag() + param.getSaleFlag(), gson.toJson(prods), 43200);
         } else {
             Type type = new TypeToken<ArrayList<ProductCustom>>() {
             }.getType();
@@ -91,18 +103,37 @@ public class ProductSolrService extends BaseService<ProductCustom, Integer> impl
 
     @Override
     public Object searchProducsByProdId(List list) {
-        //查询语句
-        SolrQuery query = QueryUtils.buildQueryByProdIds(list);
-        //产品查询
-        SolrIndexQuery solrIndexQuery = new ProductSolrIndexQueryAdapter(factory.getProductServer()).query(query);
-        List<ProductCustom> prods = solrIndexQuery.asList(ProductCustom.class);
-        //处理销售量
-        prods=handlerSalesNum(prods);
-        return SUCCESS(prods);
+        Gson gson = new Gson();
+        List<ProductCustom> customs=new ArrayList<>();
+        if (null != list && 0 != list.size()) {
+            for (int i = 0; i < list.size(); i++) {
+                int prodId = (Integer) list.get(i);
+                String json = (String) redisTemplate.get("productId" + prodId);
+                //redis中不存在，则代表该产品首次查询，放入redis中
+                if (StringUtils.isBlank(json)) {
+                    //查询语句
+                    SolrQuery query = QueryUtils.buildQueryByProdId(prodId);
+                    //产品查询
+                    SolrIndexQuery solrIndexQuery = new ProductSolrIndexQueryAdapter(factory.getProductServer()).query(query);
+                    List<ProductCustom> prods = solrIndexQuery.asList(ProductCustom.class);
+                    if(prods!=null && prods.size()!=0) {
+                        redisTemplate.set("productId" + prodId, gson.toJson(prods.get(0)));
+                        customs.add(prods.get(0));
+                    }
+                }
+                else {   //redis中存在，就使用redis中的销售量
+                    Type type = new TypeToken<ProductCustom>() {
+                    }.getType();
+                    ProductCustom prod = gson.fromJson(json.toString(), type);
+                    customs.add(prod);
+                }
+            }
+        }
+        return SUCCESS(customs);
     }
 
     @Override
-    public Object searchProductById(int prodId) {
+    public Object searchProductById(int prodId, Integer userId) {
         //从redis中读取缓存
         String json = (String) redisTemplate.get("productId" + prodId);
         Gson gson = new Gson();
@@ -116,9 +147,9 @@ public class ProductSolrService extends BaseService<ProductCustom, Integer> impl
             SolrIndexQuery solrIndexQuery = new ProductSolrIndexQueryAdapter(factory.getProductServer()).query(query);
             prods = solrIndexQuery.asList(ProductCustom.class);
             //放在缓存
-            prods = handlerSalesNum(prods);
             if (null != prods && 0 != prods.size()) {
                 prod = prods.get(0);
+                redisTemplate.set("productId" + prodId,prod);
             }
         } else {
             //从缓存中读取
@@ -129,41 +160,58 @@ public class ProductSolrService extends BaseService<ProductCustom, Integer> impl
         ProductDetail productDetail = getProductDetail(prod);
         CategoryExample example = new CategoryExample();
         example.setCondition(prod.getCategoryId());
-        CategoryCustom cat = categoryMapperCustom.selectCategoryById(example);
-        productDetail.setCategoryName(cat.getCategoryName());
+        try {
+            CategoryCustom cat = categoryMapperCustom.selectCategoryById(example);
+            productDetail.setCategoryName(cat.getCategoryName());
+            //搜索是由登录用户发起，并记录其个性化推荐
+            if (userId != null) {
+                //设置用户个性化推荐參數
+                RecommendCustom recommend = new RecommendCustom();
+                recommend.setCategoryId(prod.getCategoryId());
+                recommend.setCreateBy(0);
+                recommend.setCreateTime(new Date());
+                recommend.setLastUpdataBy(0);
+                recommend.setLastUpdateTime(new Date());
+                recommend.setUserId(userId);
+                recommend.setProductId(prod.getProductId());
+                //记录用户个性化推荐
+                recommendFacade.insertRecommenProduct(recommend);
+            }
+        } catch (Exception e) {
+            new RuntimeException();
+        }
         return SUCCESS(productDetail);
     }
 
     @Override
     public Object checkProductNum(ProductDetailQueryVo vo) {
         redisTemplate.delete("productId1");
-        if(null==vo)
-            return FAIL(ResponseType.PARAMETER_NULL,"query is null");
-        String json=(String) redisTemplate.get("productId"+vo.getProductId());
-
+        if (null == vo)
+            return FAIL(ResponseType.PARAMETER_NULL, "query is null");
+        String json = (String) redisTemplate.get("productId" + vo.getProductId());
         Gson gson = new Gson();
         List<ProductCustom> prods = new ArrayList<ProductCustom>();
         ProductCustom prod = new ProductCustom();
-        if(StringUtils.isBlank(json)){
+        if (StringUtils.isBlank(json)) {
             //查询语句
             SolrQuery query = QueryUtils.buildQueryByProdId(vo.getProductId());
             //产品查询
             SolrIndexQuery solrIndexQuery = new ProductSolrIndexQueryAdapter(factory.getProductServer()).query(query);
             prods = solrIndexQuery.asList(ProductCustom.class);
             //放在缓存
-            prods = handlerSalesNum(prods);
             if (null != prods && 0 != prods.size()) {
                 prod = prods.get(0);
+                redisTemplate.set("productId" + vo.getProductId(),prod);
             }
-        }else{
+        } else {
             //从缓存中读取
             Type type = new TypeToken<ProductCustom>() {
             }.getType();
             prod = gson.fromJson(json.toString(), type);
         }
-        if(vo.getCount() > prod.getProductNum())
-            return FAIL(ResponseType.PARAMETER_ERROR,prod.getProductNum()+"");
-        ShoppingCartProdCustom cartProdCustom=new ShoppingCartProdCustom();
+        if (vo.getCount() > prod.getProductNum())
+            return FAIL(ResponseType.PARAMETER_ERROR, prod.getProductNum() + "");
+        ShoppingCartProdCustom cartProdCustom = new ShoppingCartProdCustom();
         cartProdCustom.setCartId(vo.getCartId());
         cartProdCustom.setProductId(vo.getProductId());
         cartProdCustom.setAmount(vo.getCount());
@@ -172,23 +220,108 @@ public class ProductSolrService extends BaseService<ProductCustom, Integer> impl
     }
 
     @Override
-    public Object searchHistoryProduct( List<History> historys) {
-        List<HistoryResponse> resp=new ArrayList<HistoryResponse>();
-        for(int i=0;i< historys.size();i++){
-            HistoryResponse response=new HistoryResponse();
+    public Object searchHistoryProduct(List<History> historys) {
+        List<HistoryResponse> resp = new ArrayList<HistoryResponse>();
+        Gson gson = new Gson();
+        for (int i = 0; i < historys.size(); i++) {
+            HistoryResponse response = new HistoryResponse();
             response.setDatetime(historys.get(i).getDatetime());
-            List list=historys.get(i).getProds();
-            //查询语句
-            SolrQuery query = QueryUtils.buildQueryByProdIds(list);
-            //产品查询
-            SolrIndexQuery solrIndexQuery = new ProductSolrIndexQueryAdapter(factory.getProductServer()).query(query);
-            List<ProductCustom> prods = solrIndexQuery.asList(ProductCustom.class);
-            //处理销售量
-            prods=handlerSalesNum(prods);
-            response.setProds(prods);
+            List list = historys.get(i).getProds();
+            List<ProductCustom> customs=new ArrayList<>();
+            if (null != list && 0 != list.size()) {
+                for (int j = 0; j < list.size(); j++) {
+                    int prodId = (Integer) list.get(j);
+                    String json = (String) redisTemplate.get("productId" + prodId);
+                    //redis中不存在，则代表该产品首次查询，放入redis中
+                    if (StringUtils.isBlank(json)) {
+                        SolrQuery query = QueryUtils.buildQueryByProdId(prodId);
+                        //产品查询
+                        SolrIndexQuery solrIndexQuery = new ProductSolrIndexQueryAdapter(factory.getProductServer()).query(query);
+                        List<ProductCustom> prods = solrIndexQuery.asList(ProductCustom.class);
+                        if (prods != null && prods.size() != 0) {
+                            redisTemplate.set("productId" + prodId, gson.toJson(prods.get(0)));
+                            customs.add(prods.get(0));
+                        }
+                    } else {
+                        //redis中存在，就使用redis中的销售量
+                        Type type = new TypeToken<ProductCustom>() {
+                        }.getType();
+                        ProductCustom prod = gson.fromJson(json.toString(), type);
+                        customs.add(prod);
+                    }
+                }
+            }
+            response.setProds(customs);
             resp.add(response);
         }
         return SUCCESS(resp);
+    }
+
+    @Override
+    public Object searchRecommendProds(SeachParam param) {
+        if (param == null)
+            return FAIL(ResponseType.PARAMETER_NULL, "请求参数为空");
+        List catePersonLists = new ArrayList();
+        Page<ProductCustom> products = new Page<ProductCustom>().setPageNo(param.getPageNo()).setPageSize(param.getPageSize());
+        //登录用户个性化请求
+        if (param.getUserId() != null) {
+            //获取个性化推荐的分类
+            catePersonLists = recommendCustomMapper.selectCategoryIdByUserId(param.getUserId());
+            //判断个性化推荐的分类编号是否有5个，若不足够，则从热门分类取出
+            if (catePersonLists.size() < 5) {
+                int count = 5 - catePersonLists.size();
+                List<CategoryRecommendCustom> cateRecommendLists = categoryMapper.selectCategoryRecommendByNum(count);
+                //将推荐列表结合
+                for (int j = 0; j < cateRecommendLists.size(); j++)
+                    catePersonLists.add(cateRecommendLists.get(j).getCategoryId());
+            }
+        } else {
+            //游客个性化请求
+            if(param.getCategoryIds()!=null){
+                catePersonLists = param.getCategoryIds();
+                //判断个性化推荐的分类编号是否有5个，若不足够，则从热门分类取出
+                if (param.getCategoryIds().size() < 5) {
+                    int count = 5 - catePersonLists.size();
+                    List<CategoryRecommendCustom> cateRecommendLists = categoryMapper.selectCategoryRecommendByNum(count);
+                    //将推荐列表结合
+                    for (int j=0;j<cateRecommendLists.size();j++)
+                       catePersonLists.add(cateRecommendLists.get(j).getCategoryId());
+                }
+            }
+        }
+        //请求solr搜索商品
+        //查询语句
+        SolrQuery query = QueryUtils.buildQueryByCategoryIds(catePersonLists);
+        //产品查询
+        SolrIndexQuery solrIndexQuery = new ProductSolrIndexQueryAdapter(factory.getProductServer()).query(query);
+        List<ProductCustom> prods = solrIndexQuery.asList(ProductCustom.class);
+        //处理销售量
+        prods = handlerSalesNum(prods);
+        //根据分页码，截取产品列表
+        int count = (param.getPageNo()) + (param.getPageSize());
+        int total = prods.size();
+        List<ProductCustom> subprods = null;
+        if (count > total) {
+            subprods = prods.subList(param.getPageNo() - 1, total);
+        } else {
+            subprods = prods.subList(param.getPageNo() - 1, count);
+        }
+        products = products.setResultList(subprods).setTotalCount(prods.size());
+        System.out.println(products.getResultList().size());
+        return SUCCESS(products);
+    }
+
+    @Override
+    public Object searchRecommendProdsByCategoryId(List list) {
+
+        //查询语句
+        SolrQuery query = QueryUtils.buildQueryByCategoryIds(list);
+        //产品查询
+        SolrIndexQuery solrIndexQuery = new ProductSolrIndexQueryAdapter(factory.getProductServer()).query(query);
+        List<ProductCustom> prods = solrIndexQuery.asList(ProductCustom.class);
+        //处理销售量
+        prods = handlerSalesNum(prods);
+        return SUCCESS(prods);
     }
 
 
@@ -235,6 +368,12 @@ public class ProductSolrService extends BaseService<ProductCustom, Integer> impl
     }
 
 
+    /**
+     * 获取产品详情
+     *
+     * @param prods
+     * @return
+     */
     private ProductDetail getProductDetail(ProductCustom prods) {
         ProductDetail product = new ProductDetail();
         if (null == prods)

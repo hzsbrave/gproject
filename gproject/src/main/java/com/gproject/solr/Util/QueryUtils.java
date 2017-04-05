@@ -30,7 +30,7 @@ public class QueryUtils {
                     + keyword + "))^500 ";
         SolrQuery query = new SolrQuery().setQuery(q).setStart(0).setRows(800);
         //如果叶子节点不为0，添加叶子节点过滤
-        if (0 != param.getCategoryId())
+        if (null != param.getCategoryId() && 0 != param.getCategoryId())
             query.addFilterQuery("categoryId:" + param.getCategoryId());
         //排序方式
         int priceFlag = param.getPriceFlag();
@@ -39,6 +39,28 @@ public class QueryUtils {
         query = dealSort(param.getPriceFlag(), param.getSaleFlag(), query);
         return query;
     }
+
+    /**
+     * 根据分类编号列表建立查询条件
+     * @param categoryIds
+     * @return
+     */
+    public static SolrQuery buildQueryByCategoryIds(List categoryIds) {
+        SolrQuery query = new SolrQuery();
+        String  q="categoryId: ( ";
+        if (null != categoryIds || 0 != categoryIds.size()) {
+            for (int i = 0; i < categoryIds.size(); i++) {
+                q=q+" "+categoryIds.get(i).toString();
+            }
+        }
+        q=q+" )";
+        System.out.println(q);
+        query=query.setQuery(q);
+        //拼接销售量
+        query.addSort("saleNum", SolrQuery.ORDER.desc);
+        return query;
+    }
+
 
     /**
      * 处理价格和销售量排序

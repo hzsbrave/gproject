@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.gproject.categoryrecommend.mapper.CategoryRecommendCustomMapper">
+    <resultMap id="BaseResultMap" type="com.gproject.categoryrecommend.pojo.CategoryRecommendCustom">
+        <id column="caterecom_id" property="caterecomId" jdbcType="INTEGER"/>
+        <result column="category_id" property="categoryId" jdbcType="INTEGER"/>
+        <result column="count" property="count" jdbcType="INTEGER"/>
+        <result column="time" property="time" jdbcType="TIMESTAMP"/>
+    </resultMap>
+    <sql id="Base_Column_List">
+    caterecom_id, category_id, count, time
+  </sql>
+    <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer">
+        select
+        <include refid="Base_Column_List"/>
+        from category_recommend
+        where caterecom_id = #{caterecomId,jdbcType=INTEGER}
+    </select>
+    <select id="selectCategoryRecommendByNum" resultMap="BaseResultMap" parameterType="java.lang.Integer">
+   SELECT
+        <include refid="Base_Column_List"/>
+FROM
+	category_recommend
+GROUP BY
+	category_id
+ORDER BY
+	SUM(`count`) DESC
+LIMIT #{num}
+  </select>
+</mapper>

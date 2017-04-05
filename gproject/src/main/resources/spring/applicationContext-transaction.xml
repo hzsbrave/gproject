@@ -26,6 +26,7 @@
 			<tx:method name="get*" propagation="REQUIRED" read-only="true" />
 			<tx:method name="is*" propagation="REQUIRED" read-only="true" />
 			<tx:method name="query*" propagation="REQUIRED" read-only="true" />
+			<tx:method name="select*" propagation="REQUIRED" read-only="true" />
 			<tx:method name="update*" propagation="REQUIRED"
 					   rollback-for="Exception" read-only="false" />
 			<tx:method name="delete*" propagation="REQUIRED"

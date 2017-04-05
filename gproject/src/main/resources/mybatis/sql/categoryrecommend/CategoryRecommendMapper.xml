@@ -1,0 +1,83 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.gproject.categoryrecommend.mapper.CategoryRecommendMapper">
+  <resultMap id="BaseResultMap" type="com.gproject.categoryrecommend.pojo.CategoryRecommend">
+    <id column="caterecom_id" jdbcType="INTEGER" property="caterecomId" />
+    <result column="category_id" jdbcType="INTEGER" property="categoryId" />
+    <result column="count" jdbcType="INTEGER" property="count" />
+    <result column="time" jdbcType="TIMESTAMP" property="time" />
+  </resultMap>
+  <sql id="Base_Column_List">
+    caterecom_id, category_id, count, time
+  </sql>
+  <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from category_recommend
+    where caterecom_id = #{caterecomId,jdbcType=INTEGER}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+    delete from category_recommend
+    where caterecom_id = #{caterecomId,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" parameterType="com.gproject.categoryrecommend.pojo.CategoryRecommend">
+    insert into category_recommend (caterecom_id, category_id, count, 
+      time)
+    values (#{caterecomId,jdbcType=INTEGER}, #{categoryId,jdbcType=INTEGER}, #{count,jdbcType=INTEGER}, 
+      #{time,jdbcType=TIMESTAMP})
+  </insert>
+  <insert id="insertSelective" parameterType="com.gproject.categoryrecommend.pojo.CategoryRecommend">
+    insert into category_recommend
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="caterecomId != null">
+        caterecom_id,
+      </if>
+      <if test="categoryId != null">
+        category_id,
+      </if>
+      <if test="count != null">
+        count,
+      </if>
+      <if test="time != null">
+        time,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="caterecomId != null">
+        #{caterecomId,jdbcType=INTEGER},
+      </if>
+      <if test="categoryId != null">
+        #{categoryId,jdbcType=INTEGER},
+      </if>
+      <if test="count != null">
+        #{count,jdbcType=INTEGER},
+      </if>
+      <if test="time != null">
+        #{time,jdbcType=TIMESTAMP},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.gproject.categoryrecommend.pojo.CategoryRecommend">
+    update category_recommend
+    <set>
+      <if test="categoryId != null">
+        category_id = #{categoryId,jdbcType=INTEGER},
+      </if>
+      <if test="count != null">
+        count = #{count,jdbcType=INTEGER},
+      </if>
+      <if test="time != null">
+        time = #{time,jdbcType=TIMESTAMP},
+      </if>
+    </set>
+    where caterecom_id = #{caterecomId,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.gproject.categoryrecommend.pojo.CategoryRecommend">
+    update category_recommend
+    set category_id = #{categoryId,jdbcType=INTEGER},
+      count = #{count,jdbcType=INTEGER},
+      time = #{time,jdbcType=TIMESTAMP}
+    where caterecom_id = #{caterecomId,jdbcType=INTEGER}
+  </update>
+
+</mapper>

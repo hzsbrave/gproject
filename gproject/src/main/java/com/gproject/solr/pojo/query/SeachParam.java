@@ -1,6 +1,7 @@
 package com.gproject.solr.pojo.query;
 
 import java.util.ArrayList;
+import java.util.List;
 
 /**
  * SeachParam.java
@@ -11,9 +12,11 @@ import java.util.ArrayList;
 public class SeachParam {
 
     private int productId;
+    private Integer userId;
     private String keyword;
     private String productName;
-    private int categoryId;
+    private List<Integer> categoryIds;
+    private Integer categoryId;
     private String categoryName;
     private String shortDese;
     private int pageNo;
@@ -37,6 +40,22 @@ public class SeachParam {
      * 2：降序
      */
     private int saleFlag;
+
+    public Integer getUserId() {
+        return userId;
+    }
+
+    public void setUserId(Integer userId) {
+        this.userId = userId;
+    }
+
+    public Integer getCategoryId() {
+        return categoryId;
+    }
+
+    public void setCategoryId(Integer categoryId) {
+        this.categoryId = categoryId;
+    }
 
     public int getProductId() {
         return productId;
@@ -70,12 +89,12 @@ public class SeachParam {
         this.categoryName = categoryName;
     }
 
-    public int getCategoryId() {
-        return categoryId;
+    public List<Integer> getCategoryIds() {
+        return categoryIds;
     }
 
-    public void setCategoryId(int categoryId) {
-        this.categoryId = categoryId;
+    public void setCategoryIds(List<Integer> categoryIds) {
+        this.categoryIds = categoryIds;
     }
 
     public String getProductName() {
@@ -164,7 +183,7 @@ public class SeachParam {
                 "productId=" + productId +
                 ", keyword='" + keyword + '\'' +
                 ", productName='" + productName + '\'' +
-                ", categoryId=" + categoryId +
+                ", categoryId=" + categoryIds +
                 ", categoryName='" + categoryName + '\'' +
                 ", shortDese='" + shortDese + '\'' +
                 ", pageNo=" + pageNo +

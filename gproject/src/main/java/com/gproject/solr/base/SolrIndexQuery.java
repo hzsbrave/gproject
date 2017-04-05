@@ -62,6 +62,7 @@ public class SolrIndexQuery {
         return MapperFactory.getMapper(clazz).asList(response);
     }
 
+
     public SolrDocumentList getDocumentList(){
         if(null==response||null==response.getResults())
             return null;

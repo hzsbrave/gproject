@@ -9,6 +9,7 @@ com\gproject\paypal\service\PaypalReqService.class
 com\gproject\email\util\TemplateConfig.class
 com\gproject\shoppingcart\mapper\ShoppingCartMapper.class
 com\gproject\runningaccount\pojo\vo\RunningAccountType.class
+com\gproject\common\facade\UploadFacade.class
 com\gproject\paypal\facade\PayPalFacade.class
 com\gproject\user\pojo\vo\UserExample.class
 com\gproject\util\redis\core\RedisTemplate$9.class
@@ -20,6 +21,7 @@ com\gproject\util\redis\core\RedisTemplate$16.class
 com\gproject\util\redis\core\RedisTemplate$4.class
 com\gproject\shoppingcartprods\pojo\ShoppingCartProd.class
 com\gproject\solr\pojo\vo\ProductCustom.class
+com\gproject\complaint\pojo\Complaint.class
 com\gproject\runningaccount\facade\RunningAccountFacade.class
 com\gproject\product\controller\ProductTextController.class
 com\gproject\runningaccount\mapper\RunningAccountMapper.class
@@ -39,6 +41,7 @@ com\gproject\runningaccount\pojo\RunningAccountCustom.class
 com\gproject\category\pojo\CategoryCustom.class
 com\gproject\shoppingcartprods\mapper\ShoppingCartProdMapper.class
 com\gproject\util\placeholder\CustomPropertyPlaceHolder.class
+com\gproject\complaint\controller\ComplaintController.class
 com\gproject\util\redis\utils\RedisPoolManager.class
 com\gproject\util\message\ResponseType.class
 com\gproject\util\message\RequestMessage.class
@@ -49,6 +52,7 @@ com\gproject\order\pojo\vo\OrderState.class
 com\gproject\order\facade\OrderFacade.class
 com\gproject\solr\pojo\response\ProductMapper.class
 com\gproject\category\pojo\Category.class
+com\gproject\common\service\UploadService.class
 com\gproject\address\service\AddressService.class
 com\gproject\solr\pojo\vo\ProductDetail.class
 com\gproject\runningaccount\mapper\RunningAccountCustomMapper.class
@@ -59,6 +63,7 @@ com\gproject\order\service\OrderService$1.class
 com\gproject\util\redis\core\RedisTemplate$5.class
 com\gproject\shoppingcart\service\ShoppingCartService.class
 com\gproject\util\redis\core\RedisTemplate.class
+com\gproject\common\controller\UploadController.class
 com\gproject\solr\pojo\query\SeachParam.class
 com\gproject\solr\pojo\response\AbstractMapper.class
 com\gproject\solr\facade\ProductSolrFacade.class
@@ -84,6 +89,7 @@ com\gproject\shoppingcart\mapper\ShoppingCartCustomMapper.class
 com\gproject\shoppingcart\pojo\vo\ShoppingProdVo.class
 com\gproject\category\service\CategoryService.class
 com\gproject\category\pojo\vo\CategoryResponseVo.class
+com\gproject\complaint\pojo\vo\ComplaintResponseVo.class
 com\gproject\email\service\EmailService.class
 com\gproject\orderdetail\pojo\OrderDetailCustom.class
 com\gproject\solr\pojo\query\Page.class
@@ -98,6 +104,7 @@ com\gproject\shoppingcart\service\ShoppingCartService$1.class
 com\gproject\popular\pojo\vo\PopularVo.class
 com\gproject\product\mapper\ProductCustomMapper.class
 com\gproject\util\redis\core\RedisTemplate$11.class
+com\gproject\complaint\pojo\ComplaintCustom.class
 com\gproject\email\facade\EmailFacade.class
 com\gproject\util\common\UuidUtils.class
 com\gproject\util\redis\utils\SerializerUtils.class
@@ -118,6 +125,8 @@ com\gproject\orderdetail\mapper\OrderDetailMapper.class
 com\gproject\util\redis\serializer\RedisSerializer.class
 com\gproject\solr\pojo\query\ProductDetailQueryVo.class
 com\gproject\orderdetail\pojo\OrderDetailVo.class
+com\gproject\complaint\facade\ComplaintFacade.class
+com\gproject\complaint\mapper\ComplaintCustomMapper.class
 com\gproject\runningaccount\pojo\RunningAccount.class
 com\gproject\solr\service\ProductSolrService$4.class
 com\gproject\util\redis\core\RedisTemplate$6.class
@@ -144,6 +153,7 @@ com\gproject\paypal\util\PayPalConfig.class
 com\gproject\order\service\OrderService.class
 com\gproject\shoppingcartprods\controller\ShoppingCartProdController.class
 com\gproject\util\redis\core\RedisTemplate$2.class
+com\gproject\complaint\pojo\vo\ComplaintResponse.class
 com\gproject\order\pojo\vo\OrderProduct.class
 com\gproject\productdetail\pojo\ProductDetailCustom.class
 com\gproject\order\mapper\OrderCustomMapper.class
@@ -151,7 +161,9 @@ com\gproject\runningaccount\controller\RunningAccountController.class
 com\gproject\email\util\SendEmailUtil.class
 com\gproject\popular\facade\PopularFacade.class
 com\gproject\util\redis\core\RedisTemplate$18.class
+com\gproject\complaint\service\ComplaintService.class
 com\gproject\product\pojo\ProductCustom.class
+com\gproject\complaint\mapper\ComplaintMapper.class
 com\gproject\paypal\service\PayPalService.class
 com\gproject\shoppingcart\facade\ShoppingCartFacade.class
 com\gproject\shoppingcart\pojo\ShoppingCart.class
