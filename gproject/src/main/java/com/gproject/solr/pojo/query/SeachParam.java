@@ -25,7 +25,7 @@ public class SeachParam {
     private boolean saleNumDes;
     private boolean priceSet;
     private boolean saleNumSet;
-    private ArrayList prodIds;
+    private List<Integer> prodIds;
     /**
      * 价格排序标识位
      * 0：无排序
@@ -169,11 +169,11 @@ public class SeachParam {
         this.saleFlag = saleFlag;
     }
 
-    public ArrayList getProdIds() {
+    public List<Integer> getProdIds() {
         return prodIds;
     }
 
-    public void setProdIds(ArrayList prodIds) {
+    public void setProdIds(List<Integer> prodIds) {
         this.prodIds = prodIds;
     }
 

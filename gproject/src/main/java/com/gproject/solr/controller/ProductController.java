@@ -76,4 +76,11 @@ public class ProductController {
         return productSolrService.searchRecommendProds(param);
     }
 
+    @ResponseBody
+    @RequestMapping(value = "searchRecommenByCate", method = RequestMethod.POST)
+    @ResponseStatus(HttpStatus.OK)
+    public Object searchRecommenByCate(@RequestBody RequestMessage<SeachParam> context) throws Exception{
+        SeachParam param=context.getRequestContext();
+        return productSolrService.searchRecommendProdsByCategoryId(param.getCategoryId());
+    }
 }

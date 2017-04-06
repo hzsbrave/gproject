@@ -23,6 +23,7 @@ import com.gproject.solr.base.SolrIndexQuery;
 import com.gproject.solr.base.SolrServerFactory;
 import com.gproject.solr.facade.ProductSolrFacade;
 import com.gproject.solr.pojo.vo.ProductCustom;
+import com.gproject.util.message.ResponseMessage;
 import com.gproject.util.message.ResponseType;
 import com.gproject.util.redis.core.RedisTemplate;
 import org.apache.commons.lang.StringUtils;
@@ -35,6 +36,7 @@ import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.Random;
 
 /**
  * ProductSolrService.java
@@ -104,10 +106,12 @@ public class ProductSolrService extends BaseService<ProductCustom, Integer> impl
     @Override
     public Object searchProducsByProdId(List list) {
         Gson gson = new Gson();
-        List<ProductCustom> customs=new ArrayList<>();
+        List<ProductCustom> customs = new ArrayList<>();
         if (null != list && 0 != list.size()) {
             for (int i = 0; i < list.size(); i++) {
-                int prodId = (Integer) list.get(i);
+                System.out.println(list);
+                System.out.println(list.get(i));
+                int prodId = Integer.parseInt(list.get(i) + "");
                 String json = (String) redisTemplate.get("productId" + prodId);
                 //redis中不存在，则代表该产品首次查询，放入redis中
                 if (StringUtils.isBlank(json)) {
@@ -116,12 +120,11 @@ public class ProductSolrService extends BaseService<ProductCustom, Integer> impl
                     //产品查询
                     SolrIndexQuery solrIndexQuery = new ProductSolrIndexQueryAdapter(factory.getProductServer()).query(query);
                     List<ProductCustom> prods = solrIndexQuery.asList(ProductCustom.class);
-                    if(prods!=null && prods.size()!=0) {
+                    if (prods != null && prods.size() != 0) {
                         redisTemplate.set("productId" + prodId, gson.toJson(prods.get(0)));
                         customs.add(prods.get(0));
                     }
-                }
-                else {   //redis中存在，就使用redis中的销售量
+                } else {   //redis中存在，就使用redis中的销售量
                     Type type = new TypeToken<ProductCustom>() {
                     }.getType();
                     ProductCustom prod = gson.fromJson(json.toString(), type);
@@ -149,7 +152,7 @@ public class ProductSolrService extends BaseService<ProductCustom, Integer> impl
             //放在缓存
             if (null != prods && 0 != prods.size()) {
                 prod = prods.get(0);
-                redisTemplate.set("productId" + prodId,prod);
+                redisTemplate.set("productId" + prodId, prod);
             }
         } else {
             //从缓存中读取
@@ -201,7 +204,7 @@ public class ProductSolrService extends BaseService<ProductCustom, Integer> impl
             //放在缓存
             if (null != prods && 0 != prods.size()) {
                 prod = prods.get(0);
-                redisTemplate.set("productId" + vo.getProductId(),prod);
+                redisTemplate.set("productId" + vo.getProductId(), prod);
             }
         } else {
             //从缓存中读取
@@ -227,7 +230,7 @@ public class ProductSolrService extends BaseService<ProductCustom, Integer> impl
             HistoryResponse response = new HistoryResponse();
             response.setDatetime(historys.get(i).getDatetime());
             List list = historys.get(i).getProds();
-            List<ProductCustom> customs=new ArrayList<>();
+            List<ProductCustom> customs = new ArrayList<>();
             if (null != list && 0 != list.size()) {
                 for (int j = 0; j < list.size(); j++) {
                     int prodId = (Integer) list.get(j);
@@ -243,7 +246,6 @@ public class ProductSolrService extends BaseService<ProductCustom, Integer> impl
                             customs.add(prods.get(0));
                         }
                     } else {
-                        //redis中存在，就使用redis中的销售量
                         Type type = new TypeToken<ProductCustom>() {
                         }.getType();
                         ProductCustom prod = gson.fromJson(json.toString(), type);
@@ -277,15 +279,15 @@ public class ProductSolrService extends BaseService<ProductCustom, Integer> impl
             }
         } else {
             //游客个性化请求
-            if(param.getCategoryIds()!=null){
+            if (param.getCategoryIds() != null) {
                 catePersonLists = param.getCategoryIds();
                 //判断个性化推荐的分类编号是否有5个，若不足够，则从热门分类取出
                 if (param.getCategoryIds().size() < 5) {
                     int count = 5 - catePersonLists.size();
                     List<CategoryRecommendCustom> cateRecommendLists = categoryMapper.selectCategoryRecommendByNum(count);
                     //将推荐列表结合
-                    for (int j=0;j<cateRecommendLists.size();j++)
-                       catePersonLists.add(cateRecommendLists.get(j).getCategoryId());
+                    for (int j = 0; j < cateRecommendLists.size(); j++)
+                        catePersonLists.add(cateRecommendLists.get(j).getCategoryId());
                 }
             }
         }
@@ -322,6 +324,24 @@ public class ProductSolrService extends BaseService<ProductCustom, Integer> impl
         //处理销售量
         prods = handlerSalesNum(prods);
         return SUCCESS(prods);
+    }
+
+    @Override
+    public Object searchRecommendProdsByCategoryId(Integer categoryId) {
+        List list = new ArrayList();
+        list.add(categoryId);
+        List<ProductCustom> subprods = new ArrayList<ProductCustom>();
+        ResponseMessage msg = (ResponseMessage) searchRecommendProdsByCategoryId(list);
+        if (msg.getCode() == 0 && msg.getResult() != null) {
+            List<ProductCustom> prods = (List<ProductCustom>) msg.getResult();
+            if (prods.size() < 8)
+                subprods = prods;
+            else
+                for (int i = 0; i < 8; i++) {
+                    subprods.add(prods.get(new Random().nextInt(10)));
+                }
+        }
+        return SUCCESS(subprods);
     }
 
 

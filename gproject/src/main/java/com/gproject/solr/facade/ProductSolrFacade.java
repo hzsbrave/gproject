@@ -77,4 +77,12 @@ public interface ProductSolrFacade {
      */
     public Object searchRecommendProdsByCategoryId(List list);
 
+    /**
+     * 根据分类编号搜索产品
+     * 作用范围：详情页面推荐产品
+     * 从搜索的产品中随机8个产品
+     * @return
+     */
+    public Object searchRecommendProdsByCategoryId(Integer categoryId);
+
 }

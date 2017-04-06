@@ -9,7 +9,7 @@ import java.util.List;
 public class History {
 
     private Date datetime;
-    private List<String> prods;
+    private List<Integer> prods;
 
     public Date getDatetime() {
         return datetime;
@@ -19,11 +19,11 @@ public class History {
         this.datetime = datetime;
     }
 
-    public List<String> getProds() {
+    public List<Integer> getProds() {
         return prods;
     }
 
-    public void setProds(List<String> prods) {
+    public void setProds(List<Integer> prods) {
         this.prods = prods;
     }
 }
