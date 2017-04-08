@@ -7,10 +7,13 @@ import java.util.List;
 
 public interface FavoriteCustomMapper {
 
-    public List<FavoriteCustom> selectByUserId(Integer userId);
+    public List<Integer> selectByUserId(Integer userId);
 
     public void insertSelective(FavoriteCustom custom);
 
     public void updateByPrimaryKeySelective(FavoriteCustom custom);
 
+    public FavoriteCustom selectByUserIdAndProductId(FavoriteCustom custom);
+
+    public void deleteByPrimaryKey(Integer favoriteId);
 }
