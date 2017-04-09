@@ -35,6 +35,8 @@ public class Order {
 
     private String paymentMethod;
 
+    private Integer isDelete;
+
     public String getPaymentMethod() {
         return paymentMethod;
     }
@@ -114,6 +116,14 @@ public class Order {
 
     public void setState(Integer state) {
         this.state = state;
+    }
+
+    public Integer getIsDelete() {
+        return isDelete;
+    }
+
+    public void setIsDelete(Integer isDelete) {
+        this.isDelete = isDelete;
     }
 
     @Override

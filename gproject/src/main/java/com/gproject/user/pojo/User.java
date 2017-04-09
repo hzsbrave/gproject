@@ -26,6 +26,19 @@ public class User extends BasePojo {
 
     private Date lastLoginTime;
 
+    /**
+     * 融云token
+     */
+    private String rongToken;
+
+    public String getRongToken() {
+        return rongToken;
+    }
+
+    public void setRongToken(String rongToken) {
+        this.rongToken = rongToken;
+    }
+
     public Integer getUserId() {
         return userId;
     }

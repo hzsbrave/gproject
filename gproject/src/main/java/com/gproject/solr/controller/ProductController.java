@@ -1,18 +1,14 @@
 package com.gproject.solr.controller;
 
-import com.gproject.solr.pojo.query.History;
 import com.gproject.solr.pojo.query.HistoryVO;
 import com.gproject.solr.pojo.query.ProductDetailQueryVo;
 import com.gproject.solr.pojo.query.SeachParam;
 import com.gproject.solr.service.ProductSolrService;
-import com.gproject.user.pojo.User;
 import com.gproject.util.message.RequestMessage;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
-
-import java.util.List;
 
 /**
  * SolrController.java
@@ -81,6 +77,6 @@ public class ProductController {
     @ResponseStatus(HttpStatus.OK)
     public Object searchRecommenByCate(@RequestBody RequestMessage<SeachParam> context) throws Exception{
         SeachParam param=context.getRequestContext();
-        return productSolrService.searchRecommendProdsByCategoryId(param.getCategoryId());
+        return productSolrService.searchRecommendProdsByCategoryId(param.getCategoryIds(),1);
     }
 }

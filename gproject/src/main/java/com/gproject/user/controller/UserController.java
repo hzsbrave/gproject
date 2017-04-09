@@ -32,7 +32,7 @@ public class UserController {
     @ResponseBody
     @RequestMapping(value = "register", method = RequestMethod.POST)
     @ResponseStatus(HttpStatus.OK)
-    public Object register(@RequestBody RequestMessage<User> context) {
+    public Object register(@RequestBody RequestMessage<User> context) throws Exception{
         return userService.insertUser(context.getRequestContext());
     }
 

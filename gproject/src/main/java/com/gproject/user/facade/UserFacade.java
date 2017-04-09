@@ -16,11 +16,13 @@ public interface UserFacade {
 
     /**
      * 添加一条用户记录
-     *
+     * 1.参数不为空判断，判断用户邮箱是否已经存在，若前台提示返回用户已经存在，若不为空，进行下面操作
+     * 2.将用户信息保存到数据库，插入到user表，并返回自增主键
+     * 3.用用户返回的自增主键和邮箱向融云获取token，若返回200，更新用户信息，将token保存在数据库
      * @param user 用户信息
      * @return
      */
-    public Object insertUser(User user);
+    public Object insertUser(User user) throws Exception;
 
     /**
      * 根据用户名和密码查询用户信息

@@ -5,6 +5,9 @@ import com.gproject.base.mapper.BaseMapper;
 import com.gproject.base.service.BaseService;
 import com.gproject.common.facade.UploadFacade;
 import com.gproject.email.facade.EmailFacade;
+import com.gproject.push.PushAPI;
+import com.gproject.push.models.TokenReslut;
+import com.gproject.push.util.GsonUtil;
 import com.gproject.user.facade.UserFacade;
 import com.gproject.user.mapper.UserMapperCustom;
 import com.gproject.user.pojo.User;
@@ -49,7 +52,7 @@ public class UserService extends BaseService<User, Integer> implements UserFacad
 
 
     @Override
-    public Object insertUser(User user) {
+    public Object insertUser(User user) throws Exception{
         if (null == user) {
             logger.info("the user is null.");
             return FAIL(ResponseType.PARAMETER_NULL, "the user is null");
@@ -64,6 +67,17 @@ public class UserService extends BaseService<User, Integer> implements UserFacad
             return FAIL(ResponseType.PARAMETER_EXIST, "the account is exist.");
         }
         userMapperCustom.insertUser(user);
+        //注册融云
+        PushAPI pushAPI=new PushAPI();
+        String rong=pushAPI.getTokenByUserid(user.getUserId()+"",user.getAccount(),"");
+        TokenReslut tokenReslut= (TokenReslut)GsonUtil.fromJson(rong,TokenReslut.class);
+        if(tokenReslut!=null && tokenReslut.getCode()==200){
+            String token=tokenReslut.getToken();
+            User usertoken=new User();
+            usertoken.setRongToken(token);
+            usertoken.setUserId(user.getUserId());
+            userMapperCustom.updateByPrimaryKeySelective(usertoken);
+        }
         logger.info("insert user successfully!");
         return SUCCESS(user);
     }

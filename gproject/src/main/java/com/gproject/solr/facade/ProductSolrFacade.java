@@ -1,7 +1,6 @@
 package com.gproject.solr.facade;
 
 import com.gproject.solr.pojo.query.History;
-import com.gproject.solr.pojo.query.HistoryVO;
 import com.gproject.solr.pojo.query.ProductDetailQueryVo;
 import com.gproject.solr.pojo.query.SeachParam;
 
@@ -83,6 +82,6 @@ public interface ProductSolrFacade {
      * 从搜索的产品中随机8个产品
      * @return
      */
-    public Object searchRecommendProdsByCategoryId(Integer categoryId);
+    public Object searchRecommendProdsByCategoryId(List list,int flag);
 
 }

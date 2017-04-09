@@ -6,6 +6,7 @@ import com.gproject.order.mapper.OrderCustomMapper;
 import com.gproject.order.pojo.OrderCustom;
 import com.gproject.order.pojo.vo.OrderDetailAll;
 import com.gproject.order.pojo.vo.OrderQueryVo;
+import com.gproject.order.pojo.vo.OrderState;
 import com.gproject.paypal.facade.PayPalFacade;
 import com.gproject.paypal.facade.PaypalReqFacade;
 import com.gproject.paypal.pojo.PayPalVo;
@@ -73,6 +74,7 @@ public class PaypalReqService extends BaseService<PayPalVo,Integer>  implements 
             custom.setType(RunningAccountType.PAYMENT);
             custom.setEntityId(orderCustom.getOrderId());
             orderCustom.setPaymentMethod(PaymentMethod.PAYMENT_ON_PAYPAL);
+            orderCustom.setState(OrderState.COMPLETE);
             runningAccountCustomMapper.insertRunningAccount(custom);
             orderCustomMapper.updateByPrimaryKeySelective(orderCustom);
             log.info("[PaypalReqService] doExpressCheckOut :success"+payPalVo.toString());

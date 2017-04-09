@@ -1,6 +1,7 @@
 package com.gproject.order.controller;
 
 import com.gproject.order.facade.OrderFacade;
+import com.gproject.order.pojo.OrderCustom;
 import com.gproject.order.pojo.vo.OrderInsertVo;
 import com.gproject.order.pojo.vo.OrderQueryVo;
 import com.gproject.util.message.RequestMessage;
@@ -59,5 +60,19 @@ public class OrderController {
         return orderFacade.queryOrderDetailByOrderId(example);
     }
 
+    @ResponseBody
+    @RequestMapping(value = "updateOrderByOrderId", method = RequestMethod.POST)
+    @ResponseStatus(HttpStatus.OK)
+    public Object updateOrderByOrderId(@RequestBody RequestMessage<OrderCustom> vo) throws Exception {
+        OrderCustom example=vo.getRequestContext();
+        return orderFacade.updateOrderDetailByOrderId(example);
+    }
 
+    @ResponseBody
+    @RequestMapping(value = "payOnDelivery", method = RequestMethod.POST)
+    @ResponseStatus(HttpStatus.OK)
+    public Object payOnDelivery(@RequestBody RequestMessage<OrderCustom> vo) throws Exception {
+        OrderCustom example=vo.getRequestContext();
+        return orderFacade.updateOrderInfo(example);
+    }
 }

@@ -12,6 +12,10 @@ import com.gproject.order.pojo.OrderCustom;
 import com.gproject.order.pojo.vo.*;
 import com.gproject.orderdetail.mapper.OrderDetailCustomMapper;
 import com.gproject.orderdetail.pojo.OrderDetailCustom;
+import com.gproject.runningaccount.mapper.RunningAccountCustomMapper;
+import com.gproject.runningaccount.pojo.RunningAccountCustom;
+import com.gproject.runningaccount.pojo.vo.PaymentMethod;
+import com.gproject.runningaccount.pojo.vo.RunningAccountType;
 import com.gproject.shoppingcart.mapper.ShoppingCartCustomMapper;
 import com.gproject.shoppingcart.pojo.ShoppingCartCustom;
 import com.gproject.shoppingcart.pojo.vo.ShoppingProdVo;
@@ -57,8 +61,7 @@ public class OrderService extends BaseService<Order, Integer> implements OrderFa
     @Autowired
     private ShoppingCartProdCustomMapper cartProdCustomMapper;
     @Autowired
-    private ComplaintCustomMapper complaintCustomMapper;
-
+    private RunningAccountCustomMapper runningAccountCustomMapper;
 
     @Override
     protected BaseMapper<Order, Integer> getMapper() {
@@ -119,6 +122,8 @@ public class OrderService extends BaseService<Order, Integer> implements OrderFa
         Object object;
         try {
             OrderCustom cus = getOrderCustom(vo);
+            //设置订单状态，非删除
+            cus.setIsDelete(0);
             //记录订单,插入后返回自增主键到对象
             orderCustomMapper.insertOrder(cus);
             //记录订单详情
@@ -185,8 +190,35 @@ public class OrderService extends BaseService<Order, Integer> implements OrderFa
         if (null == vo)
             return FAIL(ResponseType.PARAMETER_NULL, "query vo is null");
         OrderDetailEx all = orderCustomMapper.queryOrderDetailByOrderId(vo.getOrderId());
-        System.out.println(all.toString());
         return SUCCESS(all);
+    }
+
+    public Object updateOrderDetailByOrderId(OrderCustom vo) {
+        if (null == vo)
+            return FAIL(ResponseType.PARAMETER_NULL, "update vo is null");
+         orderCustomMapper.updateByPrimaryKeySelective(vo);
+        return SUCCESS();
+    }
+
+    public Object updateOrderInfo(OrderCustom orderCustom) {
+        try{
+            //支付-插入runningaccount数据库，修改order表支付方式
+            RunningAccountCustom custom=new RunningAccountCustom();
+            custom.setUserId(orderCustom.getUserId());
+            custom.setAmount(orderCustom.getTotalFee());
+            custom.setTransactionId("000000001");
+            custom.setType(RunningAccountType.PAYMENT);
+            custom.setEntityId(orderCustom.getOrderId());
+            orderCustom.setPaymentMethod(PaymentMethod.PAYMENT_ON_DELIVERY);
+            orderCustom.setState(OrderState.COMPLETE);
+            runningAccountCustomMapper.insertRunningAccount(custom);
+            orderCustomMapper.updateByPrimaryKeySelective(orderCustom);
+            logger.info("[pay on delivery]:success");
+        }catch (Exception e){
+            logger.info("[pay on delivery]:fail");
+            throw  new RuntimeException("pay on delivery :fail");
+        }
+        return SUCCESS();
     }
 
     /*

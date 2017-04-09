@@ -106,7 +106,7 @@ public class ProductSolrService extends BaseService<ProductCustom, Integer> impl
     @Override
     public Object searchProducsByProdId(List list) {
         Gson gson = new Gson();
-        List<ProductCustom> customs = new ArrayList<>();
+        List<ProductCustom> customs = new ArrayList<ProductCustom>();
         if (null != list && 0 != list.size()) {
             for (int i = 0; i < list.size(); i++) {
                 System.out.println(list);
@@ -230,7 +230,7 @@ public class ProductSolrService extends BaseService<ProductCustom, Integer> impl
             HistoryResponse response = new HistoryResponse();
             response.setDatetime(historys.get(i).getDatetime());
             List list = historys.get(i).getProds();
-            List<ProductCustom> customs = new ArrayList<>();
+            List<ProductCustom> customs = new ArrayList<ProductCustom>();
             if (null != list && 0 != list.size()) {
                 for (int j = 0; j < list.size(); j++) {
                     int prodId = (Integer) list.get(j);
@@ -327,9 +327,7 @@ public class ProductSolrService extends BaseService<ProductCustom, Integer> impl
     }
 
     @Override
-    public Object searchRecommendProdsByCategoryId(Integer categoryId) {
-        List list = new ArrayList();
-        list.add(categoryId);
+    public Object searchRecommendProdsByCategoryId(List list,int flag) {
         List<ProductCustom> subprods = new ArrayList<ProductCustom>();
         ResponseMessage msg = (ResponseMessage) searchRecommendProdsByCategoryId(list);
         if (msg.getCode() == 0 && msg.getResult() != null) {
