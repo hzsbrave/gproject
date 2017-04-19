@@ -20,7 +20,7 @@ public class TemplateConfig {
         //1.创建配置实例Cofiguration  
         Configuration cfg = new Configuration();
        // cfg.setClassForTemplateLoading(TemplateConfig.class, "/templates");
-        cfg.setDirectoryForTemplateLoading(new File("D:\\gproject\\gproject\\src\\main\\java\\com\\gproject\\email\\util\\templates"));
+        cfg.setDirectoryForTemplateLoading(new File("/var/ftp/pub/templates"));
         //获取模板（template）  
         Template template = cfg.getTemplate(tem_type+".ftl");
         String htmlText = FreeMarkerTemplateUtils.processTemplateIntoString(template, root);

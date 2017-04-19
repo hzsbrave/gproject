@@ -258,6 +258,7 @@ SELECT
 	ord.express_fee,
 	ord.create_time,
   ord.payment_method,
+  ord.state,
 	detail.num,
 	detail.order_detail_id,
 	detail.sum_fee,

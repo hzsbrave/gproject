@@ -1,12 +1,9 @@
 package com.gproject.email.util;
 
-import freemarker.template.TemplateException;
-
 import javax.activation.DataHandler;
 import javax.activation.URLDataSource;
 import javax.mail.*;
 import javax.mail.internet.*;
-import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.net.URL;
 import java.util.Date;
@@ -123,7 +120,7 @@ public class SendEmailUtil {
 
          String  content = TemplateConfig.getTemplate("textRegister", root);
 
-        SendEmailUtil.sendWithAttachment("1546477188@qq.com", "GMC Verification Code", "GMC Verification Code", content, "smtp", "smtp.163.com", "yu18320304743@163.com", "465", "yu18320304743", "yuhuang0119", "attachment.jpg");
+        SendEmailUtil.sendWithAttachment("1546477188@qq.com", "GMC Verification Code", "GMC Verification Code", content, "smtp", "smtp.163.com", "yu18320304743@163.com", "465", "yu18320304743", "yuhuang0119", "");
     }
 }
 
