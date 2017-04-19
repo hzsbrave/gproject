@@ -41,8 +41,7 @@ public class EmailService implements EmailFacade {
         } else {
             content = TemplateConfig.getTemplate("textForpwd", root);
         }
-        boolean bool = SendEmailUtil.sendWithAttachment(email, "GMC Verification Code", "GMC Verification Code", content, "smtp",
-                "smtp.163.com", "yu18320304743@163.com", "465", "yu18320304743", "yuhuang0119", null);
+        boolean bool = SendEmailUtil.SendEmail(email,content);
         // 验证码保存在缓存
         redisTemplate.set(email.trim()+"vercode", vercode, 600);
         log.info("从缓存中获取的验证码：" + redisTemplate.get(email.trim()+"vercode"));

@@ -2,8 +2,6 @@ package com.gproject.order.pojo.vo;
 
 import com.gproject.order.pojo.OrderCustom;
 
-import java.math.BigDecimal;
-import java.util.Date;
 import java.util.List;
 
 /**

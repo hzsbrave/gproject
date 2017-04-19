@@ -30,9 +30,9 @@ public class FtpUtil {
         FTPClient ftp = new FTPClient();
         try {
             int reply;
-            ftp.connect(host, port);// 连接FTP服务器
+            ftp.connect(host);// 连接FTP服务器
             // 如果采用默认端口，可以使用ftp.connect(host)的方式直接连接FTP服务器
-            ftp.login(username, password);// 登录
+            ftp.login("hzs", "123456");// 登录
             reply = ftp.getReplyCode();
             if (!FTPReply.isPositiveCompletion(reply)) {
                 ftp.disconnect();
@@ -55,6 +55,7 @@ public class FtpUtil {
                     }
                 }
             }
+
             //设置上传文件的类型为二进制类型
             ftp.setFileType(FTP.BINARY_FILE_TYPE);
             //上传文件
@@ -71,6 +72,7 @@ public class FtpUtil {
                 try {
                     ftp.disconnect();
                 } catch (IOException ioe) {
+                    ioe.printStackTrace();
                 }
             }
         }

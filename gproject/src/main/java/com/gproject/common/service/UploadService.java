@@ -48,7 +48,7 @@ public class UploadService extends BaseService<Object,Integer> implements Upload
                     + filename.substring(filename.lastIndexOf("."));
             // 创建新文件，路径+文件名称
             File newFile = new File(pic_path+ newFileName);
-            path="upload/"+newFileName;
+            path=newFileName;
             // 把文件从内存写入磁盘
             try{
                 file.transferTo(newFile);

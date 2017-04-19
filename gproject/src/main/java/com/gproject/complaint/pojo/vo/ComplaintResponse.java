@@ -18,6 +18,7 @@ public class ComplaintResponse  {
     private Integer complaintId;
     private Integer state;
     private String orderNumber;
+    private String complaintDesc;
 
     public String getOrderNumber() {
         return orderNumber;
@@ -105,5 +106,13 @@ public class ComplaintResponse  {
 
     public void setUserId(Integer userId) {
         this.userId = userId;
+    }
+
+    public String getComplaintDesc() {
+        return complaintDesc;
+    }
+
+    public void setComplaintDesc(String complaintDesc) {
+        this.complaintDesc = complaintDesc;
     }
 }

@@ -16,7 +16,7 @@ public interface ProductSolrFacade {
      * 将关键词分别和商品编号、商品名字、商品复合关键词按照一定的权重匹配
      * 若筛选条件存在则拼接筛选条件
      * 若缓存中存在由 关键词和筛选条件 为key的结果集，则从缓存中取出
-     * 若缓存中不存在，则请求solr搜索并将 关键词和筛选条件 为key 保存在缓存中
+     * 若缓存中不存在，则请求solr搜索并将 关键词和筛选条件为key保存在缓存中
      * @param param
      * @return
      * @throws Exception

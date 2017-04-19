@@ -1,6 +1,9 @@
 package com.gproject.email.util;
 
+import com.sun.mail.util.MailSSLSocketFactory;
 import freemarker.template.TemplateException;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.stereotype.Component;
 
 import javax.activation.DataHandler;
 import javax.activation.URLDataSource;
@@ -21,7 +24,15 @@ import java.util.Properties;
  * @Description:TODO 邮件发送工具类
  * @time:2016年10月8日 下午4:57:43
  */
+@Component
 public class SendEmailUtil {
+
+
+    private static String username="1546477188@qq.com";
+
+    private static String password="nstoochgoszwfjcb";
+
+    private static String host="smtp.qq.com";
 
     /**
      * 邮件发送的方法
@@ -87,17 +98,17 @@ public class SendEmailUtil {
 
             Multipart mainPart = new MimeMultipart();
             MimeBodyPart messageBodyPart = new MimeBodyPart();
-            //设置HTML内容  
+            //设置HTML内容
             messageBodyPart.setContent(content, "text/html; charset=utf-8");
             mainPart.addBodyPart(messageBodyPart);
             message.setContent(mainPart);
             // 添加附件的内容
-            if ( null!= attachment &&  ""!= attachment) {
+            if (null != attachment && "" != attachment) {
                 BodyPart attachmentBodyPart = new MimeBodyPart();
                 URL url = new URL(attachment);
                 URLDataSource uds = new URLDataSource(url);
                 attachmentBodyPart.setDataHandler(new DataHandler(uds));
-               // MimeUtility.encodeWord可以避免文件名乱码
+                // MimeUtility.encodeWord可以避免文件名乱码
                 attachmentBodyPart.setFileName(MimeUtility.encodeWord("attachment.jpg"));
                 mainPart.addBodyPart(attachmentBodyPart);
             }
@@ -115,15 +126,67 @@ public class SendEmailUtil {
         return false;
     }
 
+
+    public static boolean SendEmail(String toAddress, String content) {
+
+        // 获取系统属性
+        Properties properties = new Properties();
+
+        // 设置邮件服务器
+        properties.setProperty("mail.smtp.host", host);
+
+        properties.put("mail.smtp.auth", "true");
+
+        // 获取默认session对象
+        Session session = Session.getDefaultInstance(properties, new Authenticator() {
+            public PasswordAuthentication getPasswordAuthentication() {
+                return new PasswordAuthentication(username, password); //发件人邮件用户名、密码
+            }
+        });
+        try {
+            //ssl加密
+            MailSSLSocketFactory sf = new MailSSLSocketFactory();
+            sf.setTrustAllHosts(true);
+            properties.put("mail.smtp.ssl.enable", "true");
+            properties.put("mail.smtp.ssl.socketFactory", sf);
+
+            // 创建默认的 MimeMessage 对象
+            MimeMessage message = new MimeMessage(session);
+
+            // Set From: 头部头字段
+            message.setFrom(new InternetAddress(username));
+
+            // Set To: 头部头字段
+            message.addRecipient(Message.RecipientType.TO,
+                    new InternetAddress(toAddress));
+
+            // Set Subject: 头部头字段
+            message.setSubject("Buy-Shop");
+
+            // 设置消息体
+            message.setContent(content, "text/html; charset=utf-8");
+
+            // 发送消息
+            Transport.send(message);
+            System.out.println("send email success");
+            return true;
+        } catch (Exception mex) {
+            mex.printStackTrace();
+        }
+       return false;
+    }
+
+
     public static void main(String[] args) throws Exception {
 
         Map<String, String> root = new HashMap<String, String>();
         root.put("vercode", "124345");
         // type=1 ---注册  2----忘记密码
 
-         String  content = TemplateConfig.getTemplate("textRegister", root);
+        String content = TemplateConfig.getTemplate("textRegister", root);
 
-        SendEmailUtil.sendWithAttachment("1546477188@qq.com", "GMC Verification Code", "GMC Verification Code", content, "smtp", "smtp.163.com", "yu18320304743@163.com", "465", "yu18320304743", "yuhuang0119", "attachment.jpg");
+        SendEmailUtil.sendWithAttachment("1546477188@qq.com", "GMC Verification Code", "GMC Verification Code", "hello world", "\n" +
+                "pop3", "pop.126.com", "mohezishan@126.com", "465", "mohezishan", "hzs199467", null);
     }
 }
 

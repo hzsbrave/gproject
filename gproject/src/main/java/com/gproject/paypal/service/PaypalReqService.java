@@ -24,6 +24,7 @@ import org.springframework.stereotype.Service;
 import urn.ebay.api.PayPalAPI.SetExpressCheckoutResponseType;
 
 import java.math.BigDecimal;
+import java.util.Date;
 
 /**
  * Created by Administrator on 2017/3/15.
@@ -47,6 +48,9 @@ public class PaypalReqService extends BaseService<PayPalVo,Integer>  implements 
         try{
             //根据订单id获取订单详情
             OrderDetailAll orderDetailAll=orderCustomMapper.selectOrderDetailAll(vo);
+            if(orderDetailAll.getState()!=1){
+                return  FAIL(orderDetailAll.getState(),"order submit");
+            }
             SetExpressCheckoutResponseType setExpressCheckoutResponseType=payPalFacade.setExpressCheckout(orderDetailAll);
             String token=setExpressCheckoutResponseType.getToken();
             payPalVo.setToken(token);
@@ -73,8 +77,9 @@ public class PaypalReqService extends BaseService<PayPalVo,Integer>  implements 
             custom.setTransactionId(transactionId);
             custom.setType(RunningAccountType.PAYMENT);
             custom.setEntityId(orderCustom.getOrderId());
+            custom.setCreateTime(new Date());
             orderCustom.setPaymentMethod(PaymentMethod.PAYMENT_ON_PAYPAL);
-            orderCustom.setState(OrderState.COMPLETE);
+            orderCustom.setState(OrderState.WAIT_RECIEVING);
             runningAccountCustomMapper.insertRunningAccount(custom);
             orderCustomMapper.updateByPrimaryKeySelective(orderCustom);
             log.info("[PaypalReqService] doExpressCheckOut :success"+payPalVo.toString());

@@ -21,6 +21,7 @@
     <result column="user_id" property="userId" jdbcType="INTEGER" />
     <result column="complaint_desc" property="complaintDesc" jdbcType="VARCHAR" />
     <result column="state" property="state" jdbcType="INTEGER" />
+    <result column="complaint_desc" property="complaintDesc" jdbcType="VARCHAR" />
     <result column="follow_desc" property="followDesc" jdbcType="VARCHAR" />
     <result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
     <result column="product_name" property="productName" jdbcType="VARCHAR" />
@@ -46,6 +47,7 @@
 	prod.product_name,
 	prod.thumbnail,
   com.complaint_id,
+  com.complaint_desc,
 	ord.create_time,
 	com.follow_desc,
   ord.user_id,

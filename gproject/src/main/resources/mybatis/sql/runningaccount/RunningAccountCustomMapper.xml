@@ -8,9 +8,10 @@
     <result column="type" property="type" jdbcType="INTEGER" />
     <result column="amount" property="amount" jdbcType="DECIMAL" />
     <result column="entity_id" property="entityId" jdbcType="INTEGER" />
+    <result column="create_time" jdbcType="TIMESTAMP" property="createTime"/>
   </resultMap>
   <sql id="Base_Column_List" >
-    running_account_id, user_id, transaction_id, `type`, amount, entity_id
+    running_account_id, user_id, transaction_id, `type`, amount, entity_id,create_time
   </sql>
   <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
     select 
@@ -48,6 +49,9 @@
       <if test="entityId != null" >
         entity_id,
       </if>
+      <if test="createTime != null" >
+        create_time,
+      </if>
     </trim>
     <trim prefix="values (" suffix=")" suffixOverrides="," >
       <if test="runningAccountId != null" >
@@ -68,6 +72,9 @@
       <if test="entityId != null" >
         #{entityId,jdbcType=INTEGER},
       </if>
+      <if test="createTime != null">
+        #{createTime,jdbcType=TIMESTAMP},
+      </if>
     </trim>
   </insert>
   <update id="updateByPrimaryKeySelective" parameterType="com.gproject.runningaccount.pojo.RunningAccountCustom" >
@@ -87,6 +94,9 @@
       </if>
       <if test="entityId != null" >
         entity_id = #{entityId,jdbcType=INTEGER},
+      </if>
+      <if test="createTime != null">
+        create_time = #{createTime,jdbcType=TIMESTAMP},
       </if>
     </set>
     where running_account_id = #{runningAccountId,jdbcType=INTEGER}
