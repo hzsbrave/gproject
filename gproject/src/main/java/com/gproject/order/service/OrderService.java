@@ -10,6 +10,7 @@ import com.gproject.order.pojo.Order;
 import com.gproject.order.pojo.OrderCustom;
 import com.gproject.order.pojo.vo.*;
 import com.gproject.orderdetail.mapper.OrderDetailCustomMapper;
+import com.gproject.orderdetail.pojo.OrderDetail;
 import com.gproject.orderdetail.pojo.OrderDetailCustom;
 import com.gproject.runningaccount.mapper.RunningAccountCustomMapper;
 import com.gproject.runningaccount.pojo.RunningAccountCustom;
@@ -213,6 +214,22 @@ public class OrderService extends BaseService<Order, Integer> implements OrderFa
             orderCustom.setState(OrderState.WAIT_RECIEVING);
             runningAccountCustomMapper.insertRunningAccount(custom);
             orderCustomMapper.updateByPrimaryKeySelective(orderCustom);
+            //获取成功支付订单的产品编号
+            List<OrderDetail> list=orderDetailCustomMapper.selectProductIdsByOrderId(orderCustom.getOrderId());
+            Gson gson=new Gson();
+            //从缓存中读取已下单商品
+            for (OrderDetail detail:list){
+                String json = (String) redisTemplate.get("productId" + detail.getProductId());
+                if (!StringUtils.isBlank(json)) {
+                    Type type = new TypeToken<ProductCustom>() {
+                    }.getType();
+                    //更改缓存中的销售量和库存量
+                    ProductCustom cus= gson.fromJson(json.toString(), type);
+                    cus.setSaleNum(cus.getSaleNum()+detail.getNum());
+                    cus.setProductNum(cus.getProductNum()-detail.getNum());
+                    redisTemplate.set("productId" + detail.getProductId(), gson.toJson(cus));
+                }
+            }
             logger.info("[pay on delivery]:success");
         }catch (Exception e){
             logger.info("[pay on delivery]:fail");

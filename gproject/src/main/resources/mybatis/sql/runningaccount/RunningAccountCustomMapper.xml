@@ -26,7 +26,14 @@
     from running_account
     where entity_id = #{entityId,jdbcType=INTEGER}
   </select>
-
+  <select id="selectYesterdayProductId" resultType="java.lang.Integer" >
+  SELECT
+  DISTINCT(detail.product_id)
+FROM
+	running_account run_account,
+  order_detail detail
+WHERE run_account.entity_id=detail.order_id and DATE_FORMAT(run_account.create_time,"%Y-%c-%d")=DATE_FORMAT(date_sub(NOW(),interval 1 day),"%Y-%c-%d");
+  </select>
 
   <insert id="insertRunningAccount" parameterType="com.gproject.runningaccount.pojo.RunningAccountCustom" >
     insert into running_account

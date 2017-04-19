@@ -12,4 +12,14 @@
     prod_detail_id, product_id, photos, details, product_num
   </sql>
 
+  <update id="updateProductNumByProductIdBatch"  parameterType="java.util.List">
+    <foreach collection="list" item="item" index="index" open="" close="" separator=";">
+      update product
+      <set>
+        product_num=${item.productNum}
+      </set>
+      where product_id = ${item.productId}
+    </foreach>
+  </update>
+
 </mapper>

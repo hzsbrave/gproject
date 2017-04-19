@@ -73,4 +73,8 @@ VALUE
       )
     </foreach>
   </insert>
+  
+  <select id="selectProductIdsByOrderId" parameterType="java.lang.Integer" resultType="com.gproject.orderdetail.pojo.OrderDetail">
+   select product_id from order_detail where order_id=#{orderId}
+  </select>
 </mapper>

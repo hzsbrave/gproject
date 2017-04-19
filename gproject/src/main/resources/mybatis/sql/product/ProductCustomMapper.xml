@@ -21,7 +21,15 @@
     static_page, status, keyword, create_time, on_sale_time, off_sale_time
   </sql>
 
-
+  <update id="updateProductSaleNumByProductIdBatch"  parameterType="java.util.List">
+    <foreach collection="list" item="item" index="index" open="" close="" separator=";">
+      update product
+      <set>
+        sale_num=${item.saleNum}
+      </set>
+      where product_id = ${item.productId}
+    </foreach>
+  </update>
 
 
 </mapper>
