@@ -1,6 +1,7 @@
 package com.gproject.runningaccount.pojo;
 
 import java.math.BigDecimal;
+import java.util.Date;
 
 public class RunningAccount {
     private Integer runningAccountId;
@@ -14,6 +15,16 @@ public class RunningAccount {
     private BigDecimal amount;
 
     private Integer entityId;
+
+    private Date createTime;
+
+    public Date getCreateTime() {
+        return createTime;
+    }
+
+    public void setCreateTime(Date createTime) {
+        this.createTime = createTime;
+    }
 
     public Integer getRunningAccountId() {
         return runningAccountId;

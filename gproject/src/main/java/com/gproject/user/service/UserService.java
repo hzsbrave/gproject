@@ -12,6 +12,7 @@ import com.gproject.user.facade.UserFacade;
 import com.gproject.user.mapper.UserMapperCustom;
 import com.gproject.user.pojo.User;
 import com.gproject.user.pojo.vo.UserExample;
+import com.gproject.util.common.FtpUtil;
 import com.gproject.util.common.UserUtil;
 import com.gproject.util.message.ResponseMessage;
 import com.gproject.util.message.ResponseType;
@@ -20,11 +21,13 @@ import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.UUID;
 
 /**
  * modify by hezishan
@@ -49,7 +52,12 @@ public class UserService extends BaseService<User, Integer> implements UserFacad
 
     @Autowired
     private UploadFacade uploadFacade;
-
+    @Value("${ftp.ip}")
+    private String FTP_IP;
+    @Value("${ftp.directory}")
+    private String FTP_DIRECTORY;
+    @Value("${ftp.port}")
+    private Integer FTP_PORT;
 
     @Override
     public Object insertUser(User user) throws Exception{
@@ -188,13 +196,25 @@ public class UserService extends BaseService<User, Integer> implements UserFacad
             return FAIL(ResponseType.PARAMETER_NULL, "update user info is null");
         try {
             if (file != null) {
-                ResponseMessage response = (ResponseMessage) uploadFacade.uploadPicture(file);
-                if (response.getCode() == 0) {
-                    String path = (String) response.getResult();
-                    example.setImage(path);
-                }
-            }
-            userMapperCustom.updateByPrimaryKeySelective(example);
+                // 获取文件原始名称，用于获取后缀名
+                String filename = file.getOriginalFilename();
+                // 设置文件新名称，随机数字+后缀名
+                String newFileName = UUID.randomUUID()
+                        + filename.substring(filename.lastIndexOf("."));
+                boolean flag=FtpUtil.uploadFile(FTP_IP,FTP_PORT,"","",FTP_DIRECTORY,"",newFileName,file.getInputStream());
+              // ResponseMessage response = (ResponseMessage) uploadFacade.uploadPicture(file);
+                 if (flag== true) {
+                    example.setImage("upload/"+newFileName);
+                    userMapperCustom.updateByPrimaryKeySelective(example);
+                     return SUCCESS(example);
+                }else{
+                     return FAIL(ResponseType.SYSTEM_ERROR,"上传失败");
+                 }
+//                if(response.getCode()==0){
+//                    example.setImage(response.getResult().toString());
+//                }
+          }
+
         } catch (Exception e) {
 
             throw new RuntimeException();

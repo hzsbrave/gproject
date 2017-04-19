@@ -80,8 +80,9 @@ public class UserController {
     @ResponseBody
     @RequestMapping(value = "updateUserInfoImage", method = RequestMethod.POST)
     @ResponseStatus(HttpStatus.OK)
-    public Object updateUserInfoImage(User user, MultipartFile file)  throws  Exception {
-        return userService.updateUserInfoImage(user,file);
+    public Object updateUserInfoImage(@RequestBody RequestMessage<User>  user)  throws  Exception {
+        User example=user.getRequestContext();
+        return userService.updateUserInfo(example);
     }
 
     @ResponseBody

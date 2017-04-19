@@ -4,7 +4,6 @@ import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import com.gproject.base.mapper.BaseMapper;
 import com.gproject.base.service.BaseService;
-import com.gproject.complaint.mapper.ComplaintCustomMapper;
 import com.gproject.order.facade.OrderFacade;
 import com.gproject.order.mapper.OrderCustomMapper;
 import com.gproject.order.pojo.Order;
@@ -180,7 +179,7 @@ public class OrderService extends BaseService<Order, Integer> implements OrderFa
     public Object queryOrderForUserCustomerService(OrderQueryVo vo) throws Exception {
         if (null == vo)
             return FAIL(ResponseType.PARAMETER_NULL, "query vo is null");
-        List<OrderDetailAll> all = orderCustomMapper.queryOrderCustomService(vo.getUserId());
+        List<OrderDetailAll> all = orderCustomMapper.queryOrderCustomService(vo);
         System.out.println(all.toString());
         return SUCCESS(all);
     }
@@ -209,8 +208,9 @@ public class OrderService extends BaseService<Order, Integer> implements OrderFa
             custom.setTransactionId("000000001");
             custom.setType(RunningAccountType.PAYMENT);
             custom.setEntityId(orderCustom.getOrderId());
+            custom.setCreateTime(new Date());
             orderCustom.setPaymentMethod(PaymentMethod.PAYMENT_ON_DELIVERY);
-            orderCustom.setState(OrderState.COMPLETE);
+            orderCustom.setState(OrderState.WAIT_RECIEVING);
             runningAccountCustomMapper.insertRunningAccount(custom);
             orderCustomMapper.updateByPrimaryKeySelective(orderCustom);
             logger.info("[pay on delivery]:success");

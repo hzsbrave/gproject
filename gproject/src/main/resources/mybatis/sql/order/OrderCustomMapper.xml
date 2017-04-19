@@ -150,65 +150,75 @@
         </if>
     </select>
 
-    <select id="queryOrderCustomService" resultMap="OrderDetailAllResultMap" parameterType="java.lang.Integer">
+    <select id="queryOrderCustomService" resultMap="OrderDetailAllResultMap" parameterType="com.gproject.order.pojo.vo.OrderQueryVo">
+        (
         SELECT
-	ord.order_id,
-	ord.user_id,
-	ord.prod_num,
-	ord.total_fee,
-	ord.order_number,
-	ord.express_fee,
-	ord.create_time,
-	detail.num,
-	detail.order_detail_id,
-	detail.sum_fee,
-	prod.product_name,
-	prod.short_desc,
-	prod.product_id,
-	prod.thumbnail,
-	prod.product_price,
-	complaint.state
-FROM
-	`order` ord,
-	order_detail detail,
-	product prod,
-  complaint
-WHERE
-	ord.order_id = detail.order_id
-AND detail.product_id = prod.product_id
-AND ord.user_id = #{userId}
-AND ord.state = 7
-AND  complaint.order_detail_id = detail.order_detail_id and ord.is_delete=0
-
-UNION
-
-SELECT
-	ord.order_id,
-	ord.user_id,
-	ord.prod_num,
-	ord.total_fee,
-	ord.order_number,
-	ord.express_fee,
-	ord.create_time,
-	detail.num,
-	detail.order_detail_id,
-	detail.sum_fee,
-	prod.product_name,
-	prod.short_desc,
-	prod.product_id,
-	prod.thumbnail,
-	prod.product_price,
-			0 as state
-		FROM
-			`order` ord,
-			order_detail detail,
-		  product prod
-		WHERE
-			ord.user_id = #{userId}
-		AND detail.order_id = ord.order_id
-    AND prod.product_id=detail.product_id
-    and ord.is_delete=0
-AND NOT EXISTS (SELECT 1 FROM complaint c where c.order_detail_id = detail.order_detail_id)
+        ord.order_id,
+        ord.user_id,
+        ord.prod_num,
+        ord.total_fee,
+        ord.order_number,
+        ord.express_fee,
+        ord.create_time,
+        detail.num,
+        detail.order_detail_id,
+        detail.sum_fee,
+        prod.product_name,
+        prod.short_desc,
+        prod.product_id,
+        prod.thumbnail,
+        prod.product_price,
+        complaint.state
+        FROM
+        `order` ord,
+        order_detail detail,
+        product prod,
+        complaint
+        WHERE
+        ord.order_id = detail.order_id
+        AND detail.product_id = prod.product_id
+        AND ord.user_id = #{userId}
+        AND ord.state = 7
+        AND complaint.order_detail_id = detail.order_detail_id
+        AND ord.is_delete = 0
+        )
+        UNION
+        (
+        SELECT
+        ord.order_id,
+        ord.user_id,
+        ord.prod_num,
+        ord.total_fee,
+        ord.order_number,
+        ord.express_fee,
+        ord.create_time,
+        detail.num,
+        detail.order_detail_id,
+        detail.sum_fee,
+        prod.product_name,
+        prod.short_desc,
+        prod.product_id,
+        prod.thumbnail,
+        prod.product_price,
+        0 AS state
+        FROM
+        `order` ord,
+        order_detail detail,
+        product prod
+        WHERE
+        ord.user_id = #{userId}
+        AND detail.order_id = ord.order_id
+        AND prod.product_id = detail.product_id
+        AND ord.is_delete = 0
+        AND NOT EXISTS (
+        SELECT
+        1
+        FROM
+        complaint c
+        WHERE
+        c.order_detail_id = detail.order_detail_id
+        )
+        )
     </select>
 
 

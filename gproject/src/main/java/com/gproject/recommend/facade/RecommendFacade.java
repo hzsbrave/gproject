@@ -7,6 +7,11 @@ import com.gproject.recommend.pojo.RecommendCustom;
  */
 public interface RecommendFacade {
 
+    /**
+     * 记录用户的个性化行为
+     * @param custom
+     * @return
+     */
     public Object insertRecommenProduct(RecommendCustom custom);
 
 }

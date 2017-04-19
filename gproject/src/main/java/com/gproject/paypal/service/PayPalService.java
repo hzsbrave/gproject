@@ -41,10 +41,6 @@ public class PayPalService  implements PayPalFacade {
     private PayPalConfig payPalConfig;
     @Autowired
     private AddressCustomMapper addressCustomMapper;
-    @Autowired
-    private RunningAccountCustomMapper runningAccountCustomMapper;
-    @Autowired
-    private OrderCustomMapper orderCustomMapper;
     @Value("${paypal.success.url}")
     private String SUCCESS_URL;
     @Value("${paypal.cancel.url}")

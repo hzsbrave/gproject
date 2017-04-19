@@ -7,6 +7,11 @@ import com.gproject.shoppingcartprods.pojo.ShoppingCartProd;
  */
 public interface ShoppingCartProdFacade {
 
+    /**
+     * 根据购物车详情编号，删除记录
+     * @param prod
+     * @return
+     */
     Object deleteShoppingProdByCartIdAndProdId(ShoppingCartProd prod);
 
 }
